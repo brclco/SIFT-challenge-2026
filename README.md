@@ -78,7 +78,12 @@ python3 web/dashboard.py --case /cases/<CASE> --host 127.0.0.1 --port 5000
 
 # 3. Start the agent against a case (forensic mode by default)
 #    Case data is read only through the sift-ir-agent MCP server.
+
+# 4. Generate the PDF incident report from the committed analysis artifacts
+python3 analysis-scripts/generate_report.py --case /cases/<CASE>
 ```
+
+A [sample report](docs/sample-incident-report.pdf) (Vanko case) is included.
 
 ## Submission documents
 
