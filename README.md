@@ -84,7 +84,7 @@ python3 web/dashboard.py --case /cases/<CASE> --host 127.0.0.1 --port 5000
 python3 analysis-scripts/generate_report.py --case /cases/<CASE>
 ```
 
-A [sample report](docs/sample-incident-report.pdf) (Vanko case) is included.
+A sample report (Vanko case) is included: [Markdown](docs/sample-incident-report.md) (renders inline) · [PDF](docs/sample-incident-report.pdf) (download).
 
 ## Submission documents
 
