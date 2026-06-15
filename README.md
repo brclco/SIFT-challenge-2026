@@ -43,7 +43,8 @@ hooks/                pre_tool_use.sh (Bash validation) · ensure_gateway.sh (la
 web/                  dashboard.py — live Flask dashboard (findings · theory · kill chain · coverage)
 reference/            ttp_reference.json — canonical behaviour -> ATT&CK mapping
 docs/                 architecture.html — interactive architecture / tollgate diagram
-analysis-scripts/     report + audit helpers
+analysis-scripts/     generate_report.py — PDF incident-report generator
+logs/                 agent execution logs (Vanko): narrative · MCP tool calls · guardrail decisions
 ```
 
 ## The 16 MCP forensic functions

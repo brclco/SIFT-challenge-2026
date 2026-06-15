@@ -1,0 +1,93 @@
+{"ts": "2026-06-15T16:09:21Z", "kind": "call", "fn": "build_evidence_manifest", "args": "case_dir=Vanko"}
+{"ts": "2026-06-15T16:16:18Z", "kind": "result", "fn": "build_evidence_manifest", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T16:29:17Z", "kind": "call", "fn": "parse_event_logs", "args": "evtx_path=logs, output_dir=raw"}
+{"ts": "2026-06-15T16:29:19Z", "kind": "exec", "fn": "parse_event_logs", "command": "dotnet /opt/zimmermantools/EvtxeCmd/EvtxECmd.dll -f /cases/Vanko/evidence/vanko-c-drive.CYLR/G/Windows/System32/winevt/logs --csv /cases/Vanko/analysis/raw --csvf evtx_parsed.csv", "status": "ok", "exit_code": 0, "sha256": "855042bce5a7ac32753734b093da82b350432de6b5da280c174cfc32764654b7"}
+{"ts": "2026-06-15T16:29:19Z", "kind": "result", "fn": "parse_event_logs", "status": "ok", "suspicious": 0, "error": null}
+{"ts": "2026-06-15T16:29:23Z", "kind": "call", "fn": "hunt_lotl_behaviors", "args": "evtx_dir=logs, output_dir=raw, sigma_rules_dir=sigma"}
+{"ts": "2026-06-15T16:29:23Z", "kind": "exec", "fn": "hunt_lotl_behaviors", "command": "/usr/local/bin/chainsaw hunt /cases/Vanko/evidence/vanko-c-drive.CYLR/G/Windows/System32/winevt/logs --sigma /opt/chainsaw/sigma --mapping /opt/chainsaw/mappings/sigma-event-logs-all.yml --output /cases/Vanko/analysis/raw --format json", "status": "error", "exit_code": 2, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+{"ts": "2026-06-15T16:29:23Z", "kind": "exec", "fn": "hunt_lotl_behaviors", "command": "evtx_dump --format json /cases/Vanko/evidence/vanko-c-drive.CYLR/G/Windows/System32/winevt/logs/oalerts.evtx", "status": "missing", "exit_code": -1, "sha256": ""}
+{"ts": "2026-06-15T16:29:23Z", "kind": "result", "fn": "hunt_lotl_behaviors", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T16:29:25Z", "kind": "call", "fn": "parse_amcache", "args": "hive_path=Amcache.hve, output_dir=raw"}
+{"ts": "2026-06-15T16:29:25Z", "kind": "exec", "fn": "parse_amcache", "command": "dotnet /opt/zimmermantools/AmcacheParser.dll -f /cases/Vanko/evidence/vanko-c-drive.CYLR/G/Windows/Appcompat/Programs/Amcache.hve --csv /cases/Vanko/analysis/raw --csvf amcache_parsed.csv -q", "status": "ok", "exit_code": 0, "sha256": "68b58ee5c8c595e60c90f45d7b0850cf34faea8999d78aef88a33d1aaf4806bf"}
+{"ts": "2026-06-15T16:29:25Z", "kind": "result", "fn": "parse_amcache", "status": "error", "suspicious": null, "error": "AmcacheParser produced no CSV output"}
+{"ts": "2026-06-15T16:29:29Z", "kind": "call", "fn": "parse_registry_persistence", "args": "hive_dir=config, output_dir=raw"}
+{"ts": "2026-06-15T16:29:29Z", "kind": "exec", "fn": "parse_registry_persistence", "command": "dotnet /opt/zimmermantools/RECmd/RECmd.dll -d /cases/Vanko/evidence/vanko-c-drive.CYLR/G/Windows/System32/config --bn /cases/Vanko/analysis/raw/persistence_batch.reb --csv /cases/Vanko/analysis/raw --csvf registry_persistence.csv", "status": "ok", "exit_code": 0, "sha256": "2a6353e4c331c61b821d0fe6287af4e9f0e935a309d49ef85a4749bc677da953"}
+{"ts": "2026-06-15T16:29:29Z", "kind": "result", "fn": "parse_registry_persistence", "status": "error", "suspicious": null, "error": "RECmd produced no CSV"}
+{"ts": "2026-06-15T16:29:29Z", "kind": "call", "fn": "analyze_disk_filesystem", "args": "image_path=surface_physical.E01, output_dir=raw"}
+{"ts": "2026-06-15T16:29:29Z", "kind": "exec", "fn": "analyze_disk_filesystem", "command": "fls -r -p /cases/Vanko/evidence/surface_physical.E01", "status": "error", "exit_code": 1, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+{"ts": "2026-06-15T16:29:29Z", "kind": "result", "fn": "analyze_disk_filesystem", "status": "ok", "suspicious": 0, "error": null}
+{"ts": "2026-06-15T16:34:35Z", "kind": "call", "fn": "analyze_disk_filesystem", "args": "image_path=$MFT, output_dir=raw"}
+{"ts": "2026-06-15T16:34:35Z", "kind": "exec", "fn": "analyze_disk_filesystem", "command": "fls -r -p /cases/Vanko/evidence/vanko-c-drive.CYLR/G/$MFT", "status": "error", "exit_code": 1, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+{"ts": "2026-06-15T16:34:35Z", "kind": "result", "fn": "analyze_disk_filesystem", "status": "ok", "suspicious": 0, "error": null}
+{"ts": "2026-06-15T16:35:44Z", "kind": "call", "fn": "parse_event_logs", "args": "evtx_path=Security.evtx, output_dir=raw"}
+{"ts": "2026-06-15T16:36:20Z", "kind": "exec", "fn": "parse_event_logs", "command": "dotnet /opt/zimmermantools/EvtxeCmd/EvtxECmd.dll -f /cases/Vanko/evidence/vanko-c-drive.CYLR/G/Windows/System32/winevt/logs/Security.evtx --csv /cases/Vanko/analysis/raw --csvf evtx_parsed.csv", "status": "ok", "exit_code": 0, "sha256": "3a4554c6f275d5cfd3d61f7540e3f4018eee1e16229add6d745691dbc8f51f39"}
+{"ts": "2026-06-15T16:36:21Z", "kind": "result", "fn": "parse_event_logs", "status": "ok", "suspicious": 0, "error": null}
+{"ts": "2026-06-15T16:37:32Z", "kind": "call", "fn": "parse_event_logs", "args": "evtx_path=system.evtx, output_dir=raw"}
+{"ts": "2026-06-15T16:37:52Z", "kind": "exec", "fn": "parse_event_logs", "command": "dotnet /opt/zimmermantools/EvtxeCmd/EvtxECmd.dll -f /cases/Vanko/evidence/vanko-c-drive.CYLR/G/Windows/System32/winevt/logs/system.evtx --csv /cases/Vanko/analysis/raw --csvf evtx_parsed.csv", "status": "ok", "exit_code": 0, "sha256": "3f41b36a822ffdee928ff9b2b1479b2a4a0ff704e227956ca0ae89ecb41fa9a0"}
+{"ts": "2026-06-15T16:37:53Z", "kind": "result", "fn": "parse_event_logs", "status": "ok", "suspicious": 0, "error": null}
+{"ts": "2026-06-15T16:37:53Z", "kind": "call", "fn": "parse_event_logs", "args": "evtx_path=application.evtx, output_dir=raw"}
+{"ts": "2026-06-15T16:38:20Z", "kind": "exec", "fn": "parse_event_logs", "command": "dotnet /opt/zimmermantools/EvtxeCmd/EvtxECmd.dll -f /cases/Vanko/evidence/vanko-c-drive.CYLR/G/Windows/System32/winevt/logs/application.evtx --csv /cases/Vanko/analysis/raw --csvf evtx_parsed.csv", "status": "ok", "exit_code": 0, "sha256": "d8f0d93c7fe5981598ee39120bcf64b54905011446f0c4ac64d0b59f97f852ce"}
+{"ts": "2026-06-15T16:38:20Z", "kind": "result", "fn": "parse_event_logs", "status": "ok", "suspicious": 0, "error": null}
+{"ts": "2026-06-15T16:44:44Z", "kind": "call", "fn": "build_supertimeline", "args": "evidence_dir=Prefetch, output_dir=raw, filter_date="}
+{"ts": "2026-06-15T16:44:46Z", "kind": "exec", "fn": "build_supertimeline", "command": "log2timeline.py --status_view none /cases/Vanko/analysis/raw/case.plaso /cases/Vanko/evidence/vanko-c-drive.CYLR/G/Windows/Prefetch", "status": "error", "exit_code": 2, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+{"ts": "2026-06-15T16:44:46Z", "kind": "result", "fn": "build_supertimeline", "status": "error", "suspicious": null, "error": "log2timeline failed: usage: log2timeline.py [-h] [--troubles] [-V] [--artifact_definitions PATH]\n                       [--custom_artifact_definitions PATH] [--data PATH]\n                       [--archives TYPES]\n                       [--artifact_filters ARTIFACT_FILTERS]\n                       [--artifact_filters_file PATH]\n                       [--extract_winreg_binary] [--preferred_year YEAR]\n                       [--skip_compressed_streams] [-f FILE_FILTER]\n                       [--hasher_file_size_limit SIZ"}
+{"ts": "2026-06-15T16:53:36Z", "kind": "call", "fn": "build_supertimeline", "args": "evidence_dir=G, output_dir=raw, filter_date="}
+{"ts": "2026-06-15T16:53:38Z", "kind": "exec", "fn": "build_supertimeline", "command": "log2timeline.py --status_view none /cases/Vanko/analysis/raw/case.plaso /cases/Vanko/evidence/vanko-c-drive.CYLR/G", "status": "error", "exit_code": 2, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+{"ts": "2026-06-15T16:53:38Z", "kind": "result", "fn": "build_supertimeline", "status": "error", "suspicious": null, "error": "log2timeline failed: usage: log2timeline.py [-h] [--troubles] [-V] [--artifact_definitions PATH]\n                       [--custom_artifact_definitions PATH] [--data PATH]\n                       [--archives TYPES]\n                       [--artifact_filters ARTIFACT_FILTERS]\n                       [--artifact_filters_file PATH]\n                       [--extract_winreg_binary] [--preferred_year YEAR]\n                       [--skip_compressed_streams] [-f FILE_FILTER]\n                       [--hasher_file_size_limit SIZ"}
+{"ts": "2026-06-15T17:01:37Z", "kind": "call", "fn": "build_supertimeline", "args": "evidence_dir=G, output_dir=raw, filter_date="}
+{"ts": "2026-06-15T17:14:31Z", "kind": "exec", "fn": "build_supertimeline", "command": "log2timeline.py --status_view none --storage_file /cases/Vanko/analysis/raw/case.plaso /cases/Vanko/evidence/vanko-c-drive.CYLR/G", "status": "ok", "exit_code": 0, "sha256": "34e43275f827c2efe80e461bd50046289b5ac3322d050c0da9fa77e33bef603b"}
+{"ts": "2026-06-15T17:23:51Z", "kind": "exec", "fn": "build_supertimeline", "command": "psort.py -o l2tcsv -w /cases/Vanko/analysis/raw/timeline.csv /cases/Vanko/analysis/raw/case.plaso", "status": "ok", "exit_code": 0, "sha256": "8a2dbe84050896824e0bf209f526b8ef5c834af64166bdac4f4dbfe95ac2eedf"}
+{"ts": "2026-06-15T17:25:13Z", "kind": "result", "fn": "build_supertimeline", "status": "error", "error": "field larger than field limit (131072)"}
+{"ts": "2026-06-15T17:25:13Z", "kind": "call", "fn": "build_supertimeline", "args": "evidence_dir=Windows, output_dir=raw, filter_date="}
+{"ts": "2026-06-15T17:36:17Z", "kind": "call", "fn": "build_supertimeline", "args": "evidence_dir=Prefetch, output_dir=raw, filter_date="}
+{"ts": "2026-06-15T17:36:37Z", "kind": "exec", "fn": "build_supertimeline", "command": "log2timeline.py --status_view none --storage_file /cases/Vanko/analysis/raw/case.plaso /cases/Vanko/evidence/vanko-c-drive.CYLR/G/Windows/Prefetch", "status": "ok", "exit_code": 0, "sha256": "ba38e0512757888c7c9ca768df640ca73ce15717724935443db5fdb199a27b5a"}
+{"ts": "2026-06-15T17:36:56Z", "kind": "exec", "fn": "build_supertimeline", "command": "psort.py -o l2tcsv -w /cases/Vanko/analysis/raw/timeline.csv /cases/Vanko/analysis/raw/case.plaso", "status": "ok", "exit_code": 0, "sha256": "2152171fbe272924f35f59529aba11b3b6b7c1b250eb81ac77248a500500dabb"}
+{"ts": "2026-06-15T17:36:56Z", "kind": "result", "fn": "build_supertimeline", "status": "ok", "suspicious": 18, "error": null}
+{"ts": "2026-06-15T17:37:39Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=pxrchify|cnn\\.exe|dropboxupdate|a~nsisu, ignore_case=True, max_matches=300, max_line=400"}
+{"ts": "2026-06-15T17:37:39Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:43:40Z", "kind": "call", "fn": "build_supertimeline", "args": "evidence_dir=NTUSER.DAT, output_dir=ntuser, filter_date="}
+{"ts": "2026-06-15T17:43:56Z", "kind": "exec", "fn": "build_supertimeline", "command": "log2timeline.py --status_view none --storage_file /cases/Vanko/analysis/ntuser/case.plaso /cases/Vanko/evidence/vanko-c-drive.CYLR/G/Users/PC User/NTUSER.DAT", "status": "ok", "exit_code": 0, "sha256": "7867604eea33eb88636faf1efdd3e1c91ce13b574efb23689cfec2d69544d63d"}
+{"ts": "2026-06-15T17:44:20Z", "kind": "exec", "fn": "build_supertimeline", "command": "psort.py -o l2tcsv -w /cases/Vanko/analysis/ntuser/timeline.csv /cases/Vanko/analysis/ntuser/case.plaso", "status": "ok", "exit_code": 0, "sha256": "dc754b9ba793fe2ec4d6ecb59f5a53a79d032b8c2fda708dae9db7cb5dc836e2"}
+{"ts": "2026-06-15T17:44:22Z", "kind": "result", "fn": "build_supertimeline", "status": "ok", "suspicious": 183, "error": null}
+{"ts": "2026-06-15T17:45:33Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=MountPoints2, ignore_case=True, max_matches=300, max_line=400"}
+{"ts": "2026-06-15T17:45:33Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:45:34Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=USBSTOR|MountedDevices|USB#, ignore_case=True, max_matches=300, max_line=400"}
+{"ts": "2026-06-15T17:45:35Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:45:35Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=UserAssist, ignore_case=True, max_matches=300, max_line=400"}
+{"ts": "2026-06-15T17:45:35Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:45:46Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=UserAssist.*(\\.exe|7z|rar|dropbox|ftp|Temp|Downl, ignore_case=True, max_matches=300, max_line=400"}
+{"ts": "2026-06-15T17:45:46Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:45:47Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=dropbox|7z|winrar|\\.zip|set_pxrchify|\\.7z|\\.rar, ignore_case=True, max_matches=300, max_line=400"}
+{"ts": "2026-06-15T17:45:48Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:45:57Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=WordWheelQuery|TypedPaths|RunMRU, ignore_case=True, max_matches=300, max_line=400"}
+{"ts": "2026-06-15T17:45:58Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:45:59Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=LastVisitedPidlMRU|OpenSavePidlMRU\\\\\\\\[a-zA-Z0-9, ignore_case=True, max_matches=300, max_line=400"}
+{"ts": "2026-06-15T17:45:59Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:45:59Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=sdelete|SDelete|cipher|eraser|set_PxRcHIFy, ignore_case=True, max_matches=300, max_line=400"}
+{"ts": "2026-06-15T17:46:00Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:46:09Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=Level 8 Classified|Mutant Genome, ignore_case=True, max_matches=300, max_line=700"}
+{"ts": "2026-06-15T17:46:09Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:46:10Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=RecentDocs\\\\\\\\\\.zip\\] \\['Index, ignore_case=True, max_matches=300, max_line=900"}
+{"ts": "2026-06-15T17:46:10Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:46:11Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=NinaResearch|StarkResearch|documents-export, ignore_case=True, max_matches=300, max_line=600"}
+{"ts": "2026-06-15T17:46:12Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:46:23Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=UserAssist Registry Key,Last Time Executed, ignore_case=True, max_matches=300, max_line=230"}
+{"ts": "2026-06-15T17:46:23Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:52:56Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=StarkResearch|192\\.168\\.1\\.5|Network\\\\\\\\Z|MountP, ignore_case=True, max_matches=300, max_line=400"}
+{"ts": "2026-06-15T17:52:57Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:52:57Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=Mutant Genome|Level 7|Level 8|Biochemical|ZF DNA, ignore_case=True, max_matches=300, max_line=400"}
+{"ts": "2026-06-15T17:52:58Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:53:13Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=Network\\\\\\\\Z\\]|#192\\.168\\.1\\.5#StarkResearch|Map, ignore_case=True, max_matches=20, max_line=400"}
+{"ts": "2026-06-15T17:53:14Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:53:14Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=ArcHistory|vacation photos\\.7z|NinaResearch\\.zip, ignore_case=True, max_matches=20, max_line=400"}
+{"ts": "2026-06-15T17:53:15Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:53:27Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=SDelete|Sysinternals|VeraCrypt, ignore_case=True, max_matches=25, max_line=400"}
+{"ts": "2026-06-15T17:53:28Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:53:31Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=dropbox|ks2|icloud, ignore_case=True, max_matches=25, max_line=400"}
+{"ts": "2026-06-15T17:53:32Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:53:32Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=VID_05AC|WpdDeviceHandler|DropTarget|PID_12A8, ignore_case=True, max_matches=25, max_line=400"}
+{"ts": "2026-06-15T17:53:33Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:54:10Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=DOMStorage\\\\\\\\(www\\.)?dropbox\\.com|Dropbox\\\\\\\\ks, ignore_case=True, max_matches=30, max_line=400"}
+{"ts": "2026-06-15T17:54:11Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}
+{"ts": "2026-06-15T17:54:11Z", "kind": "call", "fn": "search_case_artifact", "args": "path=timeline.csv, pattern=2016,01:4.*Dropbox|dropbox\\.com Number of, ignore_case=True, max_matches=30, max_line=400"}
+{"ts": "2026-06-15T17:54:12Z", "kind": "result", "fn": "search_case_artifact", "status": "ok", "suspicious": null, "error": null}

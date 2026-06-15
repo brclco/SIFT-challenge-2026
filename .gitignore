@@ -39,3 +39,8 @@ venv/
 *.log
 *.pid
 .DS_Store
+
+# ── Exception: curated submission execution logs are force-included ──
+!logs/
+!logs/*.log
+!logs/*.md

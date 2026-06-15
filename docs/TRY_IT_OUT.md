@@ -108,6 +108,14 @@ These should all **fail** in forensic mode — that's the point:
 `curl -s http://127.0.0.1:12345/health` shows the current mode and the allowed-binary set.
 Gateway, MCP, and agent-activity audit logs provide the timestamped execution trail.
 
+## Run it against public evidence (no restrictions)
+
+The agent is free to run and has no paywall, signup, or usage restriction. For a fully
+reproducible test on data you can download yourself, use a public **NIST CFReDS** image
+(<https://cfreds.nist.gov>) — e.g. the **"Data Leakage Case"** — place it under
+`/cases/DataLeak/evidence/`, run the sequence in step 6, and compare the committed
+`findings_log.json` against the published answer key. See [DATASET.md](DATASET.md).
+
 ## Reproducing the showcase
 
 See [DATASET.md](DATASET.md) for the Vanko walkthrough (evidence layout + the exact MCP

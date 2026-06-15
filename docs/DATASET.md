@@ -10,6 +10,25 @@ throughout (see [ACCURACY.md](ACCURACY.md) for the integrity model).
 
 ---
 
+## For judges — a free, reproducible dataset
+
+The showcase images below are forensic training datasets with documented ground truth; we do
+**not** redistribute the evidence bytes here (chain of custody). For hands-on verification on
+your own SIFT box, the agent runs against any of the public **NIST CFReDS** images
+(<https://cfreds.nist.gov>) free of charge and without restriction — in particular the
+**"Data Leakage Case,"** an insider-exfiltration scenario that exercises the same artifact
+classes as Vanko (registry user-activity, USB/MountPoints2, archiving, cloud/email exfil)
+and ships with a published answer key.
+
+To run it:
+1. Download the Data Leakage Case image from NIST CFReDS.
+2. Place it under `/cases/DataLeak/evidence/`.
+3. Follow the call sequence in [TRY_IT_OUT.md](TRY_IT_OUT.md) (`build_evidence_manifest` →
+   `build_supertimeline` → `search_case_artifact` → judge → commit).
+4. Compare the committed `findings_log.json` against the published key.
+
+---
+
 ## 1. Vanko — insider data theft (primary showcase)
 
 **Scenario.** A Windows host (`StarkSurface`, user `anthony.vanko` / "PC User") suspected
