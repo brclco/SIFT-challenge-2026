@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Evil! IR Agent — Architecture</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; background: #0d1117; overflow: hidden;
+    font-family: 'Segoe UI', system-ui, sans-serif; color: #e6edf3; }
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #161b22; border-bottom: 1px solid #30363d;
+    padding: 8px 18px; display: flex; align-items: center; gap: 14px; height: 41px;
+  }
+  header h1 { font-size: 14px; font-weight: 600; color: #58a6ff; white-space: nowrap; }
+  .hint { font-size: 11px; color: #6e7681; }
+  .spacer { flex: 1; }
+  .btn { background: #21262d; border: 1px solid #30363d; border-radius: 5px;
+    padding: 4px 10px; color: #e6edf3; font-size: 11px; cursor: pointer; }
+  .btn:hover { background: #30363d; }
+  #chart { position: fixed; top: 41px; left: 0; right: 0; bottom: 0; }
+  #tip {
+    position: fixed; background: #161b22; border: 1px solid #30363d;
+    border-radius: 7px; padding: 9px 13px; font-size: 12px; line-height: 1.6;
+    color: #e6edf3; max-width: 340px; pointer-events: none;
+    opacity: 0; transition: opacity .12s; z-index: 200; white-space: pre-wrap;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Find Evil! IR Agent — Architecture</h1>
+  <span class="hint">Scroll to zoom · drag to pan · hover any box for detail</span>
+  <div class="spacer"></div>
+  <button class="btn" id="btn-reset">Reset view</button>
+</header>
+
+<div id="chart"></div>
+<div id="tip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+"use strict";
+
+// ── Tooltip ────────────────────────────────────────────────────────────────
+const tip = document.getElementById("tip");
+function showTip(ev, text) { tip.textContent = text; tip.style.opacity = "1"; moveTip(ev); }
+function moveTip(ev) {
+  tip.style.left = Math.min(ev.clientX + 14, window.innerWidth - 360) + "px";
+  tip.style.top  = ev.clientY + 14 + "px";
+}
+function hideTip() { tip.style.opacity = "0"; }
+
+// ── SVG canvas ─────────────────────────────────────────────────────────────
+// Layout grid (all px, logical units):
+//   Row 1  y= 18-76   : User
+//   Row 2  y=126-222  : Exec Gateway (runclawd)  |  Security Config Files (right)
+//   Row 3  y=278-360  : Evidence(left)  Claude Code  |  guardrails.py (right)
+//   Row 4  y=420-508  : SIFT  |  Findings Log  |  JSONL  |  Security Framework
+//   Row 5  y=558-642  : Case Theory  |  Flask Dashboard  |  Audit Trail
+//   Row 6  y=692-772  : Legend(left)  |  PDF Report  |  Accuracy Report
+
+const VW = 1070, VH = 850;
+
+const svg = d3.select("#chart").append("svg")
+  .attr("width","100%").attr("height","100%");
+
+// Arrowhead markers
+const defs = svg.append("defs");
+function mkMarker(id, color) {
+  defs.append("marker").attr("id", id)
+    .attr("markerWidth", 9).attr("markerHeight", 7)
+    .attr("refX", 9).attr("refY", 3.5).attr("orient", "auto")
+    .append("polygon").attr("points", "0 0, 9 3.5, 0 7").attr("fill", color);
+}
+mkMarker("arr",     "#8b949e");
+mkMarker("arr-cfg", "#d29922");
+mkMarker("arr-sec", "#6e7681");
+
+const zoomG = svg.append("g");
+const zoom = d3.zoom().scaleExtent([0.12, 4])
+  .on("zoom", e => zoomG.attr("transform", e.transform));
+svg.call(zoom).on("dblclick.zoom", null);
+
+const G = zoomG;
+
+// ── Colour tokens ─────────────────────────────────────────────────────────
+const C = {
+  user:  { stroke: "#58a6ff", fill: "#0c1929" },
+  gate:  { stroke: "#f85149", fill: "#1a0808" },
+  agent: { stroke: "#3fb950", fill: "#081a0a" },
+  cfg:   { stroke: "#d29922", fill: "#1a1400" },
+  proc:  { stroke: "#79c0ff", fill: "#08111a" },
+  log:   { stroke: "#a371f7", fill: "#120a1a" },
+  out:   { stroke: "#f0883e", fill: "#1a0e04" },
+  sec:   { stroke: "#6e7681", fill: "#111318" },
+};
+
+// ── Box builder ───────────────────────────────────────────────────────────
+// sub: string or [string, string] for two subtitle lines
+// badge: small warning text at bottom
+function box({ x, y, w, h, stroke, fill, title, sub, tipText, badge }) {
+  const g = G.append("g");
+
+  g.append("rect")
+    .attr("x", x).attr("y", y).attr("width", w).attr("height", h).attr("rx", 8)
+    .attr("fill", fill).attr("stroke", stroke).attr("stroke-width", 1.8);
+
+  const lines  = sub ? (Array.isArray(sub) ? sub : [sub]) : [];
+  const nLines = lines.length + (badge ? 1 : 0);
+
+  // Vertical centering: push title up when there are subtitle lines
+  const titleY = nLines === 0 ? y + h / 2 + 4
+               : nLines === 1 ? y + h / 2 - 5
+               : nLines === 2 ? y + h / 2 - 11
+               :                y + h / 2 - 16;
+
+  g.append("text")
+    .attr("x", x + w / 2).attr("y", titleY)
+    .attr("text-anchor", "middle").attr("dominant-baseline", "middle")
+    .attr("font-size", 13).attr("font-weight", "600").attr("fill", stroke)
+    .attr("font-family", "Segoe UI, system-ui, sans-serif")
+    .text(title);
+
+  lines.forEach((line, i) => {
+    g.append("text")
+      .attr("x", x + w / 2).attr("y", titleY + 18 + i * 16)
+      .attr("text-anchor", "middle").attr("dominant-baseline", "middle")
+      .attr("font-size", 11).attr("fill", "#8b949e")
+      .attr("font-family", "Segoe UI, system-ui, sans-serif")
+      .text(line);
+  });
+
+  if (badge) {
+    g.append("text")
+      .attr("x", x + w / 2).attr("y", y + h - 10)
+      .attr("text-anchor", "middle")
+      .attr("font-size", 10).attr("fill", "#f85149")
+      .attr("font-family", "Segoe UI, system-ui, sans-serif")
+      .text(badge);
+  }
+
+  if (tipText) {
+    g.style("cursor", "default")
+     .on("mouseover", ev => showTip(ev, tipText))
+     .on("mousemove", moveTip)
+     .on("mouseout",  hideTip);
+  }
+}
+
+// ── Polyline arrow builder ────────────────────────────────────────────────
+function arrow(pts, color = "#8b949e", markerId = "arr", dash = null) {
+  const d = "M " + pts.map(p => p.join(",")).join(" L ");
+  const p = G.append("path").attr("d", d).attr("fill", "none")
+    .attr("stroke", color).attr("stroke-width", 1.6)
+    .attr("marker-end", `url(#${markerId})`);
+  if (dash) p.attr("stroke-dasharray", dash);
+}
+
+// Horizontal distribution rail (no arrowhead on rail itself)
+function rail(x1, x2, y, color = "#30363d", dash = null) {
+  const line = G.append("line")
+    .attr("x1", x1).attr("y1", y).attr("x2", x2).attr("y2", y)
+    .attr("stroke", color).attr("stroke-width", 1.6);
+  if (dash) line.attr("stroke-dasharray", dash);
+}
+
+// Small label on an arrow
+function label(x, y, text) {
+  G.append("text")
+    .attr("x", x).attr("y", y).attr("text-anchor", "middle")
+    .attr("font-size", 9.5).attr("fill", "#6e7681")
+    .attr("font-family", "Segoe UI, system-ui, sans-serif")
+    .text(text);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BOXES
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── Protocol SIFT base agent loop — background region ─────────────────────
+// Drawn first so all component boxes render above the region boundary.
+// Covers rows 3–4 (Claude Code + MCP Server). Excludes guardrails.py,
+// Security Config Files, and Security Framework (x ≥ 680) — those are project
+// additions, not part of the Protocol SIFT base.
+G.append("rect")
+  .attr("x", 5).attr("y", 248).attr("width", 640).attr("height", 278)
+  .attr("rx", 10)
+  .attr("fill", "#0d1f0d").attr("fill-opacity", 0.55)
+  .attr("stroke", "#3fb950").attr("stroke-width", 1.5)
+  .attr("stroke-dasharray", "6,4")
+  .attr("pointer-events", "none");
+
+G.append("text")
+  .attr("x", 16).attr("y", 264)
+  .attr("font-size", 9.5).attr("font-weight", "600")
+  .attr("fill", "#3fb950").attr("opacity", 0.72)
+  .attr("font-family", "Segoe UI, system-ui, sans-serif")
+  .attr("letter-spacing", ".07em")
+  .attr("pointer-events", "none")
+  .text("PROTOCOL SIFT BASE AGENT LOOP — EXTENDED VIA MCP SERVER LAYER");
+
+// Row 1 — User
+box({ x:225, y:18, w:300, h:58, ...C.user,
+  title: "User — Claude Desktop / Cowork",
+  tipText: "Supervision and direction interface.\nMonitors agent progress in real time.\nDoes not interact with evidence directly." });
+
+// Row 2 — Exec Gateway + Security Config Files
+box({ x:130, y:126, w:490, h:96, ...C.gate,
+  title: "Exec Gateway (runclawd)",
+  sub: ["Standalone localhost:12345 process — validates every Bash call",
+        "/cases/project/runclawd_exec_gateway.py · cannot be overridden"],
+  tipText: "TOLLGATE HUB. /cases/project/runclawd_exec_gateway.py — a standalone HTTP service on 127.0.0.1:12345, independent of Claude Code; launched by the SessionStart hook /cases/project/hooks/ensure_gateway.sh.\n\nEndpoints:\n  /validate         pre-exec check for every Bash command\n  /exec             gated execution\n  /commit-findings  sanctioned findings write (judge-gated)\n  /commit-artifact  sanctioned theory / coverage / accuracy / manifest write\n  /mode             read or set forensic | dev\n\nMode is read PER REQUEST from /cases/project/.gateway_mode — anything other than exactly 'dev' resolves to forensic (fail-closed). Forensic profile allows only vetted SIFT binaries + the guardrails.py interpreter and denies curl/bash/rm and any direct case-path access; dev adds curl/bash/rm/etc for tooling work only. Enforcement is architectural, not prompt-based." });
+
+box({ x:680, y:126, w:282, h:96, ...C.cfg,
+  title: "Security Config Files",
+  sub: ["mode · permissions · hooks · MCP",
+        "where every tollgate is configured"],
+  tipText: "Tollgate configuration locations:\n  /cases/project/.gateway_mode            forensic (default) | dev\n  ~/.claude/settings.json                 permissions allow/deny + hooks + model\n  ~/.mcp.json                             sift-ir-agent stdio MCP server\n  /cases/project/runclawd_exec_gateway.py the gateway itself\n  /cases/project/hooks/pre_tool_use.sh    PreToolUse Bash -> gateway /validate\n  /cases/project/hooks/ensure_gateway.sh  SessionStart gateway launcher\n  /home/la/.claude/guardrails.py          commit / mode / require-stages / activity\n  /cases/project/ttp_reference.json       MITRE TTP cross-check reference\n\nsettings.json deny-list (deny ALWAYS wins over any allow): Write to evidence/, /mnt, /media; rm -rf, dd, mkfs, wget, curl, ssh; Read of secrets/, *.env, *.key, *.pem." });
+
+// Row 3 — Evidence + Claude Code + guardrails.py
+box({ x:14, y:294, w:100, h:66, ...C.sec,
+  title: "Evidence",
+  sub: ["/cases/<case>/", "read-only"],
+  tipText: "TOLLGATE: evidence integrity. /cases/<case>/evidence/ is read-only.\nEnforced three ways: settings.json deny-list (Write/Edit blocked), the gateway's case-path deny in forensic mode, and filesystem perms.\nContent: disk images, memory dumps, .evtx logs, .pcap captures.\nSHA-256 hashed before analysis; hashes recorded in the manifest.\nNever modified — chain of custody." });
+
+box({ x:130, y:278, w:490, h:82, ...C.agent,
+  title: "Claude Code Agent",
+  sub: "Autonomous IR workflow · evidence touched only via the MCP server",
+  tipText: "Drives the investigation autonomously, constrained by two hard tollgates:\n  1. MCP-ONLY EVIDENCE ACCESS — case data under /cases/<case> is read ONLY through the sift-ir-agent MCP server (typed function calls); never raw shell.\n  2. GATEWAY-VALIDATED EXEC — every Bash command is checked by the Exec Gateway via the PreToolUse hook (/cases/project/hooks/pre_tool_use.sh -> /validate) BEFORE it runs; fail-closed if the gateway denies or is unreachable.\n\nLaunched per case from /cases/project; runs as a non-root user. The MCP server is spawned from ~/.mcp.json. Findings cannot be committed until the independent judge has verified them." });
+
+box({ x:680, y:278, w:282, h:82, ...C.cfg,
+  title: "guardrails.py",
+  sub: ["Vetted forensic interpreter",
+        "commit · mode · require-stages · activity"],
+  tipText: "/home/la/.claude/guardrails.py — TOLLGATE: forensic interpreter allowlist. In forensic mode this is the ONLY interpreter target permitted to run (no arbitrary python/scripts).\n• commit --kind findings|theory|coverage|accuracy|manifest --case <name> --from <json>  -> posts to the gateway's sanctioned write endpoints\n• mode --set forensic|dev  -> flips /cases/project/.gateway_mode\n• require-stages  -> asserts the agreed pipeline ran (e.g. the judge)\n• activity  -> appends agent-activity events for the dashboard\nEnforcement is the gateway's job; guardrails.py is the sanctioned client." });
+
+// Row 4 — Processing: MCP Server | Findings | JSONL | Security
+box({ x:14,  y:420, w:222, h:88, ...C.agent,
+  title: "MCP Server",
+  sub: ["sift-ir-agent · stdio transport",
+        "16 typed forensic functions → SIFT tools"],
+  tipText: "~/.claude/sift-mcp-server/server.py — stdio MCP server, spawned by Claude Code via ~/.mcp.json (never a network listener).\nTOLLGATE: case-read enforcement. All evidence access is a typed function call; raw shell on evidence is architecturally excluded, not prompt-blocked.\n\n16 functions (EZ Tools preferred; SIFT native as fallback), incl.:\n  build_evidence_manifest\n  read_case_artifact · search_case_artifact\n  parse_event_logs · parse_amcache · parse_registry_persistence\n  hunt_lotl_behaviors · hunt_yara\n  analyze_disk_filesystem · carve_disk_artifacts\n  analyze_memory_processes / _network / _malfind\n  analyze_network_capture\n  query_mans · build_supertimeline\n\nEvery function caps output and saves raw output to output_dir for the audit trail." });
+
+box({ x:258, y:420, w:238, h:88, ...C.log,
+  title: "Findings Log (JSON)",
+  sub: ["artifact+offset · mitre · intent_class",
+        "judge_reviewed · judge_verdict (gate)"],
+  tipText: "<case>/analysis/findings_log.json — structured JSON array, one object per finding.\nFields: timestamp, finding, artifact, offset, tool, confidence, mitre_technique, kill_chain_stage, intent_class, ai_enriched, ai_model, judge_review, self_correction, plus judge_reviewed + judge_verdict.\n\nTOLLGATE: mandatory judge gate. The gateway /commit-findings endpoint REJECTS any finding missing judge_reviewed:true or whose judge_verdict is not in {confirmed, flagged}. Every finding must also carry artifact + offset (hallucination mitigation: each claim traces to a specific artifact)." });
+
+box({ x:518, y:420, w:228, h:88, ...C.log,
+  title: "JSONL Transcript",
+  sub: ["Auto-generated by Claude Code",
+        "Every tool call · self-corrections logged"],
+  tipText: "Auto-generated by Claude Code — no extra instrumentation needed.\nCaptures every tool invocation, result, and self-correction event.\nPrimary proof of autonomous execution for judges.\nCombined with the Findings Log by the Audit Trail Aggregator." });
+
+box({ x:772, y:420, w:280, h:88, ...C.sec,
+  title: "Security Framework",
+  sub: "OWASP LLM Top 10 · MITRE ATLAS · OS hardening",
+  tipText: "Cross-cutting concern — applies to the whole system.\nOWASP LLM Top 10: all categories addressed.\n  Key: LLM01 (injection -> Exec Gateway), LLM06 (exec allowlist),\n       LLM09 (artifact+offset), LLM10 (retry cap).\nMITRE ATLAS: adversarial AI techniques as known limitations.\nOS hardening: non-root user, firewall, read-only evidence, .env isolation.\nThe tollgate chain (MCP-only reads, gateway-validated exec, forensic mode, deny-list, interpreter allowlist, sanctioned writes, judge gate) is the concrete enforcement." });
+
+// Row 5 — Sub-processing: Case Theory | Flask | Audit Trail
+box({ x:160, y:558, w:220, h:84, ...C.proc,
+  title: "Case Theory Engine",
+  sub: ["Live adversary narrative (Component 3a)",
+        "→ case_theory.json"],
+  tipText: "Python watcher reads findings_log.json on each new write.\nCalls Claude with all accumulated findings to synthesise:\n  • Adversary intent narrative (updates after each finding)\n  • Overall intent: MALICE / SUSPICION / NEGLIGENCE\n  • Active MITRE techniques list\nOutputs case_theory.json, polled by the Flask Dashboard every 3s.\nNo new dependencies — Claude + Python." });
+
+box({ x:400, y:558, w:220, h:84, ...C.out,
+  title: "Flask Dashboard",
+  sub: ["dashboard.py · polls every 3 seconds",
+        "Findings · theory · kill chain · agent status"],
+  tipText: "Single-file Flask app: dashboard.py\nRun: python3 dashboard.py --case /cases/SRL-2015\n  --host 0.0.0.0 for LAN access (split-screen demo)\n4 panels:\n  1. Live findings feed (ai_enriched badge, MITRE tag, confidence)\n  2. Case Theory — adversary narrative from case_theory.json\n  3. Kill Chain tracker — 12-stage progress bar\n  4. Agent status — last tool, AI vs deterministic, judge-flagged, uptime" });
+
+box({ x:640, y:558, w:240, h:84, ...C.log,
+  title: "Audit Trail Aggregator",
+  sub: "JSONL transcript + findings log combined",
+  tipText: "Script combines JSONL transcripts with the structured findings log.\nProduces a single, navigable audit trail document.\nRequired submission deliverable — proves the agent ran autonomously\nand that every finding is traceable to a specific artifact and tool call." });
+
+// Row 6 — Outputs: PDF | Accuracy
+box({ x:400, y:698, w:210, h:76, ...C.out,
+  title: "PDF Report",
+  sub: "Auto-generated · required deliverable",
+  tipText: "Auto-generated from the findings log and audit trail.\nExtends generate_pdf_report.py (Protocol SIFT base).\nContents: executive summary, event timeline, MITRE ATT&CK map,\nartefact evidence table, guardrails test results, accuracy assessment.\nRequired submission deliverable." });
+
+box({ x:626, y:698, w:268, h:76, ...C.out,
+  title: "Accuracy Report",
+  sub: ["scored vs ground truth (when present)",
+        "independent judge · TTP cross-check"],
+  tipText: "<case>/analysis/accuracy_report.json — scores findings against a dataset ground_truth.json when one exists: precision/recall over MITRE TTPs, IOC coverage, and intent class (MALICE / SUSPICION / NEGLIGENCE).\n\nTOLLGATE: independent judge. Every finding is verified by a SEPARATE Claude subagent that re-checks the cited artifact via the MCP server and validates each mitre_technique against /cases/project/ttp_reference.json; a mismatch -> judge_verdict:flagged. Only confirmed/flagged findings can be committed.\nWritten via the gateway /commit-artifact endpoint.\n\nKnown limitation: adversarial anti-forensic evasion (MITRE ATLAS)." });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ARROWS + CONNECTORS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// User → Exec Gateway (vertical)
+arrow([[375, 76], [375, 126]]);
+
+// Security Config → Exec Gateway (horizontal left, config colour)
+arrow([[680, 174], [620, 174]], "#d29922", "arr-cfg");
+label(650, 160, "configures");
+
+// Exec Gateway → Claude Code (vertical)
+arrow([[375, 222], [375, 278]]);
+
+// guardrails.py → Claude Code (horizontal left, config colour)
+arrow([[680, 319], [620, 319]], "#d29922", "arr-cfg");
+label(650, 308, "commit · mode");
+
+// Evidence → Claude Code (horizontal right)
+arrow([[114, 327], [130, 327]], "#6e7681", "arr-sec");
+label(120, 317, "reads");
+
+// Claude Code trunk → distribution rail
+arrow([[375, 360], [375, 408]]);
+
+// Solid distribution rail: SIFT · Findings · JSONL
+rail(125, 632, 408);
+
+// Dashed extension → Security Framework
+rail(632, 912, 408, "#6e7681", "5,4");
+
+// Vertical drops from rail to Row 4 boxes
+arrow([[125, 408], [125, 420]]);
+label(165, 417, "MCP stdio");
+arrow([[377, 408], [377, 420]]);
+arrow([[632, 408], [632, 420]]);
+arrow([[912, 408], [912, 420]], "#6e7681", "arr-sec");
+label(870, 403, "governs  ·  ·  ·");
+
+// Findings Log → splits to Case Theory and Flask Dashboard
+arrow([[377, 508], [377, 542]]);
+rail(270, 510, 542);
+arrow([[270, 542], [270, 558]]);
+arrow([[510, 542], [510, 558]]);
+label(255, 554, "live synthesis");
+label(520, 554, "live view");
+
+// JSONL → elbow → Audit Trail
+arrow([[632, 508], [632, 534], [760, 534], [760, 558]]);
+label(700, 528, "combined");
+
+// Audit Trail → splits to PDF and Accuracy
+arrow([[760, 642], [760, 680]]);
+rail(505, 760, 680);
+arrow([[505, 680], [505, 698]]);
+arrow([[760, 680], [760, 698]]);
+
+// ═══════════════════════════════════════════════════════════════════════════
+// LEGEND
+// ═══════════════════════════════════════════════════════════════════════════
+const lg = G.append("g").attr("transform", "translate(14,698)");
+lg.append("rect").attr("width", 196).attr("height", 130).attr("rx", 7)
+  .attr("fill", "#111318").attr("stroke", "#30363d").attr("stroke-width", 1);
+
+[
+  ["#58a6ff", "User interface"],
+  ["#f85149", "Security / guardrail layer"],
+  ["#3fb950", "Agent / execution"],
+  ["#d29922", "Configuration"],
+  ["#79c0ff", "Processing / tools"],
+  ["#a371f7", "Logging / data"],
+  ["#f0883e", "Output / report"],
+].forEach(([color, lbl], i) => {
+  lg.append("rect").attr("x", 10).attr("y", 11 + i * 17).attr("width", 10).attr("height", 10)
+    .attr("rx", 2).attr("fill", color);
+  lg.append("text").attr("x", 26).attr("y", 21 + i * 17)
+    .attr("font-size", 10.5).attr("fill", "#8b949e")
+    .attr("font-family", "Segoe UI, system-ui, sans-serif").text(lbl);
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INITIAL VIEW — fit diagram to window
+// ═══════════════════════════════════════════════════════════════════════════
+function resetView() {
+  const cw = document.getElementById("chart").clientWidth;
+  const ch = document.getElementById("chart").clientHeight;
+  const scale = Math.min(cw / VW, ch / VH) * 0.93;
+  svg.transition().duration(500).call(zoom.transform,
+    d3.zoomIdentity
+      .translate((cw - VW * scale) / 2, (ch - VH * scale) / 2 + 6)
+      .scale(scale));
+}
+
+document.getElementById("btn-reset").addEventListener("click", resetView);
+window.addEventListener("resize", resetView);
+resetView();
+</script>
+</body>
+</html>

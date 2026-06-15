@@ -1,0 +1,14 @@
+# SIFT IR Agent — MCP server dependencies
+#
+# Install inside the case project venv:
+#   source /cases/project/.venv/bin/activate
+#   pip install -r requirements.txt
+
+# MCP server framework
+mcp>=1.0.0
+
+# No other Python packages needed:
+# - All forensic tool invocations go via subprocess (stdlib)
+# - CSV/JSON/re/pathlib are stdlib
+# - External tools (volatility3, tshark, evtx_dump, chainsaw, etc.)
+#   are installed at the OS level on SIFT Workstation

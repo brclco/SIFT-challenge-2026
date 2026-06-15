@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "sift-ir-agent": {
+      "command": "python3",
+      "args": ["/home/la/.claude/sift-mcp-server/server.py"],
+      "cwd": "/home/la/.claude/sift-mcp-server",
+      "env": {
+        "PYTHONPATH": "/home/la/.claude/sift-mcp-server"
+      }
+    }
+  }
+}

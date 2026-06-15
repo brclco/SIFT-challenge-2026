@@ -1,0 +1,41 @@
+# ── Never commit evidence or case data (chain of custody) ──
+/cases/
+**/evidence/
+*.E01
+*.e01
+*.raw
+*.mem
+*.dmp
+*.vmem
+*.plaso
+*.pcap
+*.pcapng
+*.hve
+$MFT
+**/analysis/raw/
+**/timeline*.csv
+
+# ── Never commit secrets / credentials ──
+*.token
+token*.txt
+.env
+.env.*
+*.key
+*.pem
+*.gateway_token
+hosts.yml
+.config/gh/
+
+# ── Python / build noise ──
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# ── Local runtime artifacts ──
+*.out
+*.log
+*.pid
+.DS_Store

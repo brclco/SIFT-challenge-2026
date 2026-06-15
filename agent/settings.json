@@ -1,0 +1,89 @@
+{
+  "_comment": "GLOBAL INVARIANTS ONLY. Activity-specific allow-lists live in per-directory .claude/settings.json (forensic: /cases/$CASE, dashboard/dev: /cases/project). deny ALWAYS wins over any allow in any merged file, so these guardrails cannot be loosened by a project profile.",
+  "model": "sonnet",
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "ask": [],
+    "allow": [
+      "mcp__sift-ir-agent__build_supertimeline"
+    ],
+    "deny": [
+      "Read(./secrets/**)",
+      "Read(/cases/**/.env)",
+      "Read(/cases/**/.gateway_token)",
+      "Read(./**/*.key)",
+      "Read(./**/*.pem)",
+
+      "Write(/cases/*/evidence/**)",
+      "Edit(/cases/*/evidence/**)",
+      "Write(/mnt/**)",
+      "Write(/media/**)",
+      "Edit(/mnt/**)",
+      "Edit(/media/**)",
+
+      "Bash(rm -rf:*)",
+      "Bash(dd:*)",
+      "Bash(mkfs:*)",
+      "Bash(wget:*)",
+      "Bash(curl:*)",
+      "Bash(ssh:*)",
+      "Bash(scp:*)",
+      "Bash(nc:*)",
+      "WebFetch"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /cases/project/hooks/pre_tool_use.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "mkdir -p ./analysis/ && echo \"$(date -u): $CONVERSATION_SUMMARY\" >> ./analysis/forensic_audit.log"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /cases/project/hooks/ensure_gateway.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -rc --arg ts \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" '{ts:$ts,action:\"activity\",event:\"subagent-start\",detail:((.description // .subagent_type // .agent_type // \"subagent\")|tostring)}' >> /home/la/analysis/agent_activity.log 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -rc --arg ts \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\" '{ts:$ts,action:\"activity\",event:\"subagent-stop\",detail:((.description // .subagent_type // .agent_type // \"subagent\")|tostring)}' >> /home/la/analysis/agent_activity.log 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}
