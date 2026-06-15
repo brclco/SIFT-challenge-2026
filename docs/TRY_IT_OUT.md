@@ -4,6 +4,21 @@ Local setup for judges on a **SANS SIFT Workstation** (Ubuntu, x86-64). There is
 URL — DFIR work runs against local evidence, so the agent is designed to run on the analyst's
 own SIFT box.
 
+## One-line install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/brclco/SIFT-challenge-2026/main/install.sh | bash
+```
+
+This is idempotent and non-destructive: it clones the repo to `~/find-evil`, installs the
+Python dependencies, registers the `sift-ir-agent` MCP server in `~/.mcp.json` (**merging**,
+after backing up any existing config), and starts the exec gateway in forensic mode. It does
+**not** edit `~/.claude/settings.json` — it prints the hook + permission-deny snippet for you
+to review and merge (that file governs your agent's guardrails, so we never auto-edit it).
+
+Targets are overridable: `FINDEVIL_HOME`, `FINDEVIL_MCP_CONFIG`, `FINDEVIL_SKIP_GATEWAY`,
+`FINDEVIL_SKIP_DEPS`. The manual steps below do exactly the same thing, explicitly.
+
 ## Prerequisites
 
 - SANS SIFT Workstation with the standard toolchain on `PATH`: Plaso

@@ -69,6 +69,15 @@ Each caps its output and writes raw tool output to an audit directory.
 - **Execution logs** — gateway, MCP, and agent-activity audit trails with timestamps
 - **PDF incident report** — stakeholder summary
 
+## Install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/brclco/SIFT-challenge-2026/main/install.sh | bash
+```
+
+Idempotent and non-destructive (merges your MCP config + backs it up; never edits
+`~/.claude/settings.json`). See [docs/TRY_IT_OUT.md](docs/TRY_IT_OUT.md) for details and manual setup.
+
 ## Quick start
 
 ```bash
