@@ -9,6 +9,8 @@ model that makes the guardrails **architectural, not prompt-based**.
 
 > Status: private working repo for the challenge. Will be made public for submission.
 
+**🎥 Demo video:** https://youtu.be/P76R-BOwr7U
+
 ## Why this design
 
 LLM agents hallucinate and can be prompt-injected by evidence. So enforcement here does

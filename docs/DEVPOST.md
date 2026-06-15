@@ -88,6 +88,7 @@ MITRE ATT&CK. Extends `marez8505/find-evil` and Protocol SIFT.
 
 ---
 
+**Demo video:** https://youtu.be/P76R-BOwr7U ·
 **Repo:** github.com/brclco/SIFT-challenge-2026 ·
 **Try it / logs / accuracy / architecture:** see `README.md`, `docs/`, and `logs/` (which
 includes a pre-worked three-claim trace mapping findings to the exact tool executions).
