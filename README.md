@@ -80,6 +80,14 @@ python3 web/dashboard.py --case /cases/<CASE> --host 127.0.0.1 --port 5000
 #    Case data is read only through the sift-ir-agent MCP server.
 ```
 
+## Submission documents
+
+- [Project description](docs/PROJECT_DESCRIPTION.md) — what it does, how it's built, challenges, learnings
+- [Dataset documentation](docs/DATASET.md) — sources, findings, reproducibility (Vanko / SRL-2015 / VIGIA)
+- [Accuracy & evidence-integrity report](docs/ACCURACY.md) — false positives, coverage gaps, hallucination posture, spoliation resistance
+- [Try it out](docs/TRY_IT_OUT.md) — setup for judges on a SIFT workstation
+- [Architecture diagram](docs/architecture.html) — interactive; distinguishes architectural vs prompt-based guardrails
+
 ## Credits
 
 Extends [`marez8505/find-evil`](https://github.com/marez8505/find-evil) and the Protocol SIFT
