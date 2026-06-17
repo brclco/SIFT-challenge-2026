@@ -105,7 +105,7 @@ A sample report (Vanko case) is included: [Markdown](docs/sample-incident-report
 - [Accuracy & evidence-integrity report](docs/ACCURACY.md) — false positives, coverage gaps, hallucination posture, spoliation resistance
 - [Try it out](docs/TRY_IT_OUT.md) — setup for judges on a SIFT workstation
 - [Architecture diagram](docs/architecture.html) — interactive; distinguishes architectural vs prompt-based guardrails
-- [Script relationship map](docs/script_graph.html) — interactive graph of every script + relationships; click a node to view its source (regenerate with `analysis-scripts/build_script_graph.py`)
+- [Script mind-map](docs/script_graph.html) — interactive collapsible tree: starts at the entry point (`install.sh`) and reveals what each script pulls in as you click; click any node to view its source (regenerate with `analysis-scripts/build_script_graph.py`)
 
 ## Credits
 

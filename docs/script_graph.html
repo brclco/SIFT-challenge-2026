@@ -3,55 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Find Evil! — Script Relationship Map</title>
+<title>Find Evil! — Script Mind-Map</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { width: 100%; height: 100%; background: #0d1117; overflow: hidden;
-    font-family: 'Segoe UI', system-ui, sans-serif; color: #e6edf3; }
-  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 42px;
-    background: #161b22; border-bottom: 1px solid #30363d; padding: 9px 16px;
-    display: flex; align-items: center; gap: 14px; }
-  header h1 { font-size: 14px; font-weight: 600; color: #58a6ff; white-space: nowrap; }
-  .hint { font-size: 11px; color: #6e7681; }
-  .spacer { flex: 1; }
-  .btn { background: #21262d; border: 1px solid #30363d; border-radius: 5px;
-    padding: 4px 10px; color: #e6edf3; font-size: 11px; cursor: pointer; }
-  .btn:hover { background: #30363d; }
-  #chart { position: fixed; top: 42px; left: 0; right: 0; bottom: 0; }
-  /* sidebar */
-  #side { position: fixed; top: 42px; right: 0; bottom: 0; width: 46%; max-width: 760px;
-    background: #0b0f14; border-left: 1px solid #30363d; z-index: 90;
-    transform: translateX(100%); transition: transform .18s ease; display: flex;
-    flex-direction: column; }
-  #side.open { transform: translateX(0); box-shadow: -12px 0 30px rgba(0,0,0,.45); }
-  #side-hd { display: flex; align-items: center; gap: 10px; padding: 9px 12px;
-    border-bottom: 1px solid #30363d; background: #161b22; }
-  #side-hd .path { font-family: ui-monospace, monospace; font-size: 12.5px; color: #e6edf3;
-    word-break: break-all; }
-  #side-hd .tag { font-size: 10px; padding: 2px 7px; border-radius: 10px; color: #0d1117;
-    font-weight: 700; white-space: nowrap; }
-  #side pre { margin: 0; padding: 12px 14px; overflow: auto; flex: 1;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;
-    line-height: 1.5; color: #c9d1d9; white-space: pre; tab-size: 4; }
-  #close { margin-left: auto; }
-  #tip { position: fixed; background: #161b22; border: 1px solid #30363d; border-radius: 6px;
-    padding: 5px 9px; font-family: ui-monospace, monospace; font-size: 11.5px; color: #e6edf3;
-    pointer-events: none; opacity: 0; transition: opacity .1s; z-index: 200; }
-  .node-label { font-family: ui-monospace, monospace; font-size: 10px; fill: #adbac7;
-    pointer-events: none; }
-  .edge-label { font-size: 8.5px; fill: #6e7681; pointer-events: none; }
-  #legend { position: fixed; left: 12px; bottom: 12px; z-index: 80; background: #161b22cc;
-    border: 1px solid #30363d; border-radius: 7px; padding: 8px 10px; font-size: 11px; }
-  #legend div { display: flex; align-items: center; gap: 7px; margin: 2px 0; }
-  #legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  html, body { width:100%; height:100%; background:#0d1117; overflow:hidden;
+    font-family:'Segoe UI',system-ui,sans-serif; color:#e6edf3; }
+  header { position:fixed; top:0; left:0; right:0; z-index:100; height:42px; background:#161b22;
+    border-bottom:1px solid #30363d; padding:9px 16px; display:flex; align-items:center; gap:14px; }
+  header h1 { font-size:14px; font-weight:600; color:#58a6ff; white-space:nowrap; }
+  .hint { font-size:11px; color:#6e7681; }
+  .spacer { flex:1; }
+  .btn { background:#21262d; border:1px solid #30363d; border-radius:5px; padding:4px 10px;
+    color:#e6edf3; font-size:11px; cursor:pointer; }
+  .btn:hover { background:#30363d; }
+  #chart { position:fixed; top:42px; left:0; right:0; bottom:0; }
+  #side { position:fixed; top:42px; right:0; bottom:0; width:46%; max-width:760px; background:#0b0f14;
+    border-left:1px solid #30363d; z-index:90; transform:translateX(100%); transition:transform .18s ease;
+    display:flex; flex-direction:column; }
+  #side.open { transform:translateX(0); box-shadow:-12px 0 30px rgba(0,0,0,.45); }
+  #side-hd { display:flex; align-items:center; gap:10px; padding:9px 12px; border-bottom:1px solid #30363d;
+    background:#161b22; }
+  #side-hd .path { font-family:ui-monospace,monospace; font-size:12.5px; word-break:break-all; }
+  #side-hd .tag { font-size:10px; padding:2px 7px; border-radius:10px; color:#0d1117; font-weight:700;
+    white-space:nowrap; }
+  #side pre { margin:0; padding:12px 14px; overflow:auto; flex:1;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; line-height:1.5;
+    color:#c9d1d9; white-space:pre; tab-size:4; }
+  #close { margin-left:auto; }
+  #tip { position:fixed; background:#161b22; border:1px solid #30363d; border-radius:6px; padding:5px 9px;
+    font-family:ui-monospace,monospace; font-size:11.5px; pointer-events:none; opacity:0;
+    transition:opacity .1s; z-index:200; max-width:340px; }
+  .link { fill:none; stroke:#3d444d; stroke-width:1.5px; }
+  .nlabel { font-family:ui-monospace,monospace; font-size:11px; fill:#adbac7; }
+  .elabel { font-size:9px; fill:#6e7681; }
+  .ref text { font-style:italic; }
+  #legend { position:fixed; left:12px; bottom:12px; z-index:80; background:#161b22cc;
+    border:1px solid #30363d; border-radius:7px; padding:8px 10px; font-size:11px; }
+  #legend div { display:flex; align-items:center; gap:7px; margin:2px 0; }
+  #legend i { width:10px; height:10px; border-radius:2px; display:inline-block; }
 </style>
 </head>
 <body>
 <header>
-  <h1>Find Evil! — Script Relationship Map</h1>
-  <span class="hint">24 scripts · 32 relationships · 3 solitary — click a node to view its source · scroll to zoom · drag to pan/move</span>
+  <h1>Find Evil! — Script Mind-Map</h1>
+  <span class="hint">27 scripts/configs · 4 standalone — click a node to expand · click a file to view its source · scroll/drag to zoom &amp; pan</span>
   <div class="spacer"></div>
-  <button class="btn" id="btn-reset">Reset view</button>
+  <button class="btn" id="btn-expand">Expand all</button>
+  <button class="btn" id="btn-reset">Collapse / reset</button>
 </header>
 <div id="chart"></div>
 <div id="tip"></div>
@@ -737,65 +735,167 @@ def main():
 if __name__ == &quot;__main__&quot;:
     main()
 </textarea>
-<textarea hidden id="src-1">#!/usr/bin/env python3
-&quot;&quot;&quot;build_script_graph.py — generate an interactive HTML map of the repo&#x27;s scripts.
+<textarea hidden id="src-1">{
+  &quot;_comment&quot;: &quot;GLOBAL INVARIANTS ONLY. Activity-specific allow-lists live in per-directory .claude/settings.json (forensic: /cases/$CASE, dashboard/dev: /cases/project). deny ALWAYS wins over any allow in any merged file, so these guardrails cannot be loosened by a project profile.&quot;,
+  &quot;model&quot;: &quot;sonnet&quot;,
+  &quot;permissions&quot;: {
+    &quot;defaultMode&quot;: &quot;acceptEdits&quot;,
+    &quot;ask&quot;: [],
+    &quot;allow&quot;: [
+      &quot;mcp__sift-ir-agent__build_supertimeline&quot;
+    ],
+    &quot;deny&quot;: [
+      &quot;Read(./secrets/**)&quot;,
+      &quot;Read(/cases/**/.env)&quot;,
+      &quot;Read(/cases/**/.gateway_token)&quot;,
+      &quot;Read(./**/*.key)&quot;,
+      &quot;Read(./**/*.pem)&quot;,
 
-Walks the repository for every .py / .sh script, draws a force-directed graph of how they
-relate (imports / launches / validates-via / vets / registers), and embeds each script&#x27;s
-source so clicking a node opens it in a sidebar. Scripts with no relationships are included
-as solitary (floating) nodes.
+      &quot;Write(/cases/*/evidence/**)&quot;,
+      &quot;Edit(/cases/*/evidence/**)&quot;,
+      &quot;Write(/mnt/**)&quot;,
+      &quot;Write(/media/**)&quot;,
+      &quot;Edit(/mnt/**)&quot;,
+      &quot;Edit(/media/**)&quot;,
 
-Relationships are declared explicitly in EDGES below (derived from the actual imports and
-cross-references in the code); re-run this after structural changes.
+      &quot;Bash(rm -rf:*)&quot;,
+      &quot;Bash(dd:*)&quot;,
+      &quot;Bash(mkfs:*)&quot;,
+      &quot;Bash(wget:*)&quot;,
+      &quot;Bash(curl:*)&quot;,
+      &quot;Bash(ssh:*)&quot;,
+      &quot;Bash(scp:*)&quot;,
+      &quot;Bash(nc:*)&quot;,
+      &quot;WebFetch&quot;
+    ]
+  },
+  &quot;hooks&quot;: {
+    &quot;PreToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Bash&quot;,
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;bash /cases/project/hooks/pre_tool_use.sh&quot;
+          }
+        ]
+      }
+    ],
+    &quot;Stop&quot;: [
+      {
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;mkdir -p ./analysis/ &amp;&amp; echo \&quot;$(date -u): $CONVERSATION_SUMMARY\&quot; &gt;&gt; ./analysis/forensic_audit.log&quot;
+          }
+        ]
+      }
+    ],
+    &quot;SessionStart&quot;: [
+      {
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;bash /cases/project/hooks/ensure_gateway.sh&quot;,
+            &quot;timeout&quot;: 10
+          }
+        ]
+      }
+    ],
+    &quot;SubagentStart&quot;: [
+      {
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;jq -rc --arg ts \&quot;$(date -u +%Y-%m-%dT%H:%M:%SZ)\&quot; &#x27;{ts:$ts,action:\&quot;activity\&quot;,event:\&quot;subagent-start\&quot;,detail:((.description // .subagent_type // .agent_type // \&quot;subagent\&quot;)|tostring)}&#x27; &gt;&gt; /home/la/analysis/agent_activity.log 2&gt;/dev/null || true&quot;
+          }
+        ]
+      }
+    ],
+    &quot;SubagentStop&quot;: [
+      {
+        &quot;hooks&quot;: [
+          {
+            &quot;type&quot;: &quot;command&quot;,
+            &quot;command&quot;: &quot;jq -rc --arg ts \&quot;$(date -u +%Y-%m-%dT%H:%M:%SZ)\&quot; &#x27;{ts:$ts,action:\&quot;activity\&quot;,event:\&quot;subagent-stop\&quot;,detail:((.description // .subagent_type // .agent_type // \&quot;subagent\&quot;)|tostring)}&#x27; &gt;&gt; /home/la/analysis/agent_activity.log 2&gt;/dev/null || true&quot;
+          }
+        ]
+      }
+    ]
+  }
+}
+</textarea>
+<textarea hidden id="src-2">#!/usr/bin/env python3
+&quot;&quot;&quot;build_script_graph.py — interactive collapsible mind-map of the repo&#x27;s scripts + configs.
+
+Renders a tree you expand by clicking: it starts at the entry point (install.sh) and reveals
+what each node pulls in (imports / launches / validates-via / vets / registers / wires) only
+when you click it. Click any real script or JSON to view its source in the sidebar. Cycles are
+shown once and then as &quot;↩&quot; references; shared dependencies appear once at first encounter.
+Files not wired into the run (the graph generator, package __init__ markers, an unused config)
+are grouped under a &quot;Standalone&quot; node so nothing is hidden.
 
 Usage:  python3 analysis-scripts/build_script_graph.py [REPO_ROOT] [OUT_HTML]
-Default: REPO_ROOT = repo root (parent of this script&#x27;s dir), OUT = docs/script_graph.html
+Default OUT: docs/script_graph.html
 &quot;&quot;&quot;
 
 import html
+import json
 import os
 import sys
 
-# (source, target, label) — repo-relative paths.
-EDGES = [
-    # sift-mcp-server: server imports each tool + the audit parser
-    (&quot;sift-mcp-server/server.py&quot;, &quot;sift-mcp-server/parsers/audit.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/server.py&quot;, &quot;sift-mcp-server/tools/volatility.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/server.py&quot;, &quot;sift-mcp-server/tools/evtx.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/server.py&quot;, &quot;sift-mcp-server/tools/lotl.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/server.py&quot;, &quot;sift-mcp-server/tools/filesystem.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/server.py&quot;, &quot;sift-mcp-server/tools/carve.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/server.py&quot;, &quot;sift-mcp-server/tools/registry.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/server.py&quot;, &quot;sift-mcp-server/tools/network.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/server.py&quot;, &quot;sift-mcp-server/tools/yara.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/server.py&quot;, &quot;sift-mcp-server/tools/timeline.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/server.py&quot;, &quot;sift-mcp-server/tools/amcache.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/server.py&quot;, &quot;sift-mcp-server/tools/casedata.py&quot;, &quot;imports&quot;),
-    # each tool imports the shared parser helpers
-    (&quot;sift-mcp-server/tools/filesystem.py&quot;, &quot;sift-mcp-server/parsers/common.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/tools/volatility.py&quot;, &quot;sift-mcp-server/parsers/common.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/tools/timeline.py&quot;, &quot;sift-mcp-server/parsers/common.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/tools/evtx.py&quot;, &quot;sift-mcp-server/parsers/common.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/tools/carve.py&quot;, &quot;sift-mcp-server/parsers/common.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/tools/registry.py&quot;, &quot;sift-mcp-server/parsers/common.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/tools/amcache.py&quot;, &quot;sift-mcp-server/parsers/common.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/tools/lotl.py&quot;, &quot;sift-mcp-server/parsers/common.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/tools/yara.py&quot;, &quot;sift-mcp-server/parsers/common.py&quot;, &quot;imports&quot;),
-    (&quot;sift-mcp-server/tools/network.py&quot;, &quot;sift-mcp-server/parsers/common.py&quot;, &quot;imports&quot;),
-    # cross-language wiring
-    (&quot;agent/guardrails.py&quot;, &quot;gateway/runclawd_exec_gateway.py&quot;, &quot;calls (HTTP :12345)&quot;),
-    (&quot;hooks/pre_tool_use.sh&quot;, &quot;gateway/runclawd_exec_gateway.py&quot;, &quot;validates via&quot;),
-    (&quot;hooks/ensure_gateway.sh&quot;, &quot;gateway/runclawd_exec_gateway.py&quot;, &quot;launches&quot;),
-    (&quot;web/dashboard.py&quot;, &quot;gateway/runclawd_exec_gateway.py&quot;, &quot;reads audit / mode&quot;),
-    (&quot;web/dashboard.py&quot;, &quot;agent/guardrails.py&quot;, &quot;mode toggle&quot;),
-    (&quot;gateway/runclawd_exec_gateway.py&quot;, &quot;agent/guardrails.py&quot;, &quot;vets (allowlist)&quot;),
-    (&quot;install.sh&quot;, &quot;gateway/runclawd_exec_gateway.py&quot;, &quot;launches&quot;),
-    (&quot;install.sh&quot;, &quot;sift-mcp-server/server.py&quot;, &quot;registers (MCP)&quot;),
-    (&quot;install.sh&quot;, &quot;web/dashboard.py&quot;, &quot;documents&quot;),
-    (&quot;install.sh&quot;, &quot;analysis-scripts/generate_report.py&quot;, &quot;documents&quot;),
-]
+# parent rel-path -&gt; [(child rel-path, relationship label)]
+ADJ = {
+    &quot;install.sh&quot;: [
+        (&quot;gateway/runclawd_exec_gateway.py&quot;, &quot;launches&quot;),
+        (&quot;sift-mcp-server/server.py&quot;, &quot;registers (MCP)&quot;),
+        (&quot;web/dashboard.py&quot;, &quot;documents&quot;),
+        (&quot;analysis-scripts/generate_report.py&quot;, &quot;documents&quot;),
+        (&quot;agent/settings.json&quot;, &quot;wires hooks&quot;),
+    ],
+    &quot;gateway/runclawd_exec_gateway.py&quot;: [
+        (&quot;agent/guardrails.py&quot;, &quot;vets (allowlist)&quot;),
+    ],
+    &quot;agent/guardrails.py&quot;: [
+        (&quot;gateway/runclawd_exec_gateway.py&quot;, &quot;calls (HTTP :12345)&quot;),
+        (&quot;reference/ttp_reference.json&quot;, &quot;judge TTP cross-check&quot;),
+    ],
+    &quot;sift-mcp-server/server.py&quot;: [
+        (&quot;sift-mcp-server/parsers/audit.py&quot;, &quot;imports&quot;),
+        (&quot;sift-mcp-server/tools/volatility.py&quot;, &quot;imports&quot;),
+        (&quot;sift-mcp-server/tools/evtx.py&quot;, &quot;imports&quot;),
+        (&quot;sift-mcp-server/tools/lotl.py&quot;, &quot;imports&quot;),
+        (&quot;sift-mcp-server/tools/filesystem.py&quot;, &quot;imports&quot;),
+        (&quot;sift-mcp-server/tools/carve.py&quot;, &quot;imports&quot;),
+        (&quot;sift-mcp-server/tools/registry.py&quot;, &quot;imports&quot;),
+        (&quot;sift-mcp-server/tools/network.py&quot;, &quot;imports&quot;),
+        (&quot;sift-mcp-server/tools/yara.py&quot;, &quot;imports&quot;),
+        (&quot;sift-mcp-server/tools/timeline.py&quot;, &quot;imports&quot;),
+        (&quot;sift-mcp-server/tools/amcache.py&quot;, &quot;imports&quot;),
+        (&quot;sift-mcp-server/tools/casedata.py&quot;, &quot;imports&quot;),
+    ],
+    &quot;web/dashboard.py&quot;: [
+        (&quot;gateway/runclawd_exec_gateway.py&quot;, &quot;reads audit / mode&quot;),
+        (&quot;agent/guardrails.py&quot;, &quot;mode toggle&quot;),
+    ],
+    &quot;agent/settings.json&quot;: [
+        (&quot;hooks/pre_tool_use.sh&quot;, &quot;PreToolUse hook&quot;),
+        (&quot;hooks/ensure_gateway.sh&quot;, &quot;SessionStart hook&quot;),
+    ],
+    &quot;hooks/pre_tool_use.sh&quot;: [
+        (&quot;gateway/runclawd_exec_gateway.py&quot;, &quot;validates via&quot;),
+    ],
+    &quot;hooks/ensure_gateway.sh&quot;: [
+        (&quot;gateway/runclawd_exec_gateway.py&quot;, &quot;launches&quot;),
+    ],
+}
+for _t in (&quot;volatility&quot;, &quot;evtx&quot;, &quot;lotl&quot;, &quot;filesystem&quot;, &quot;carve&quot;, &quot;registry&quot;,
+           &quot;network&quot;, &quot;yara&quot;, &quot;timeline&quot;, &quot;amcache&quot;):
+    ADJ[&quot;sift-mcp-server/tools/%s.py&quot; % _t] = [
+        (&quot;sift-mcp-server/parsers/common.py&quot;, &quot;imports&quot;)]
 
-# top-level dir -&gt; (group key, colour)
+ROOT = &quot;install.sh&quot;
+
 GROUPS = {
     &quot;sift-mcp-server&quot;: (&quot;mcp&quot;, &quot;#3fb950&quot;),
     &quot;gateway&quot;: (&quot;gateway&quot;, &quot;#f85149&quot;),
@@ -803,79 +903,96 @@ GROUPS = {
     &quot;hooks&quot;: (&quot;hooks&quot;, &quot;#a371f7&quot;),
     &quot;web&quot;: (&quot;web&quot;, &quot;#58a6ff&quot;),
     &quot;analysis-scripts&quot;: (&quot;analysis&quot;, &quot;#39c5cf&quot;),
+    &quot;reference&quot;: (&quot;reference&quot;, &quot;#e3b341&quot;),
     &quot;(root)&quot;: (&quot;root&quot;, &quot;#f0883e&quot;),
 }
 
 
-def group_of(relpath):
-    top = relpath.split(&quot;/&quot;, 1)[0] if &quot;/&quot; in relpath else &quot;(root)&quot;
+def group_of(rel):
+    top = rel.split(&quot;/&quot;, 1)[0] if &quot;/&quot; in rel else &quot;(root)&quot;
     return GROUPS.get(top, (&quot;root&quot;, &quot;#8b949e&quot;))
 
 
 def main():
     here = os.path.dirname(os.path.abspath(__file__))
-    root = os.path.abspath(sys.argv[1]) if len(sys.argv) &gt; 1 else os.path.dirname(here)
-    out = sys.argv[2] if len(sys.argv) &gt; 2 else os.path.join(root, &quot;docs&quot;, &quot;script_graph.html&quot;)
+    root_dir = os.path.abspath(sys.argv[1]) if len(sys.argv) &gt; 1 else os.path.dirname(here)
+    out = sys.argv[2] if len(sys.argv) &gt; 2 else os.path.join(root_dir, &quot;docs&quot;, &quot;script_graph.html&quot;)
 
-    # discover all scripts
-    scripts = []
-    for dirpath, dirnames, filenames in os.walk(root):
-        dirnames[:] = [d for d in dirnames if d not in (&quot;.git&quot;, &quot;__pycache__&quot;, &quot;.venv&quot;)]
-        for fn in filenames:
-            if fn.endswith((&quot;.py&quot;, &quot;.sh&quot;)):
-                rel = os.path.relpath(os.path.join(dirpath, fn), root).replace(os.sep, &quot;/&quot;)
-                scripts.append(rel)
-    scripts.sort()
+    files = []
+    for dp, dn, fn in os.walk(root_dir):
+        dn[:] = [d for d in dn if d not in (&quot;.git&quot;, &quot;__pycache__&quot;, &quot;.venv&quot;)]
+        for f in fn:
+            if f.endswith((&quot;.py&quot;, &quot;.sh&quot;, &quot;.json&quot;)):
+                files.append(os.path.relpath(os.path.join(dp, f), root_dir).replace(os.sep, &quot;/&quot;))
+    files.sort()
+    src_index = {rel: i for i, rel in enumerate(files)}
 
-    idx = {rel: i for i, rel in enumerate(scripts)}
-    connected = set()
-    for s, t, _ in EDGES:
-        connected.add(s); connected.add(t)
+    # reachable from ROOT
+    reachable, stack = set(), [ROOT]
+    while stack:
+        cur = stack.pop()
+        if cur in reachable:
+            continue
+        reachable.add(cur)
+        for c, _ in ADJ.get(cur, []):
+            stack.append(c)
+    standalone = sorted(f for f in files if f not in reachable)
 
-    # build node + link JSON (hand-rolled to avoid deps)
-    nodes_js = []
+    counter = [0]
+    expanded = set()
+
+    def node_for(rel, edge, ancestors):
+        nid = counter[0]; counter[0] += 1
+        gkey, color = group_of(rel)
+        n = {&quot;id&quot;: nid, &quot;name&quot;: rel.split(&quot;/&quot;)[-1], &quot;path&quot;: rel, &quot;edge&quot;: edge,
+             &quot;group&quot;: gkey, &quot;color&quot;: color, &quot;srcId&quot;: src_index.get(rel),
+             &quot;kind&quot;: &quot;json&quot; if rel.endswith(&quot;.json&quot;) else &quot;script&quot;}
+        specs = ADJ.get(rel, [])
+        if specs:
+            if rel in ancestors or rel in expanded:
+                n[&quot;kind&quot;] = &quot;ref&quot;; n[&quot;name&quot;] += &quot;  ↩&quot;
+            else:
+                expanded.add(rel)
+                n[&quot;children&quot;] = [node_for(c, lbl, ancestors + [rel]) for c, lbl in specs]
+        return n
+
+    def syn(name, edge, desc, children):
+        nid = counter[0]; counter[0] += 1
+        return {&quot;id&quot;: nid, &quot;name&quot;: name, &quot;edge&quot;: edge, &quot;desc&quot;: desc, &quot;kind&quot;: &quot;synthetic&quot;,
+                &quot;group&quot;: &quot;root&quot;, &quot;color&quot;: &quot;#8b949e&quot;, &quot;srcId&quot;: None, &quot;children&quot;: children}
+
+    tree = syn(
+        &quot;Find Evil! scripts&quot;, &quot;&quot;,
+        &quot;The Find Evil! script tree. Click a node to reveal what it pulls in; click again to &quot;
+        &quot;collapse. Click any script or JSON to view its source here. &#x27;↩&#x27; marks a node &quot;
+        &quot;shown in full elsewhere (cycle or shared dependency).&quot;,
+        [
+            node_for(ROOT, &quot;entry point&quot;, []),
+            syn(&quot;Standalone (%d)&quot; % len(standalone), &quot;not wired into the run&quot;,
+                &quot;Files no other script imports, launches, or references at runtime: the graph &quot;
+                &quot;generator, Python package __init__ markers, and an unused MCP settings copy.&quot;,
+                [node_for(p, &quot;standalone&quot;, []) for p in standalone]),
+        ],
+    )
+
     textareas = []
-    for i, rel in enumerate(scripts):
-        gkey, colour = group_of(rel)
-        label = rel.split(&quot;/&quot;)[-1]
-        solitary = rel not in connected
-        nodes_js.append(
-            &#x27;{id:%d,path:%s,label:%s,group:%s,color:%s,solitary:%s}&#x27;
-            % (i, _q(rel), _q(label), _q(gkey), _q(colour), &quot;true&quot; if solitary else &quot;false&quot;)
-        )
+    for rel, i in src_index.items():
         try:
-            with open(os.path.join(root, rel), encoding=&quot;utf-8&quot;, errors=&quot;replace&quot;) as f:
+            with open(os.path.join(root_dir, rel), encoding=&quot;utf-8&quot;, errors=&quot;replace&quot;) as f:
                 src = f.read()
         except OSError:
             src = &quot;(could not read file)&quot;
-        textareas.append(
-            &#x27;&lt;textarea hidden id=&quot;src-%d&quot;&gt;%s&lt;/textarea&gt;&#x27; % (i, html.escape(src))
-        )
+        textareas.append(&#x27;&lt;textarea hidden id=&quot;src-%d&quot;&gt;%s&lt;/textarea&gt;&#x27; % (i, html.escape(src)))
 
-    links_js = []
-    for s, t, lbl in EDGES:
-        if s in idx and t in idx:
-            links_js.append(&#x27;{source:%d,target:%d,label:%s}&#x27; % (idx[s], idx[t], _q(lbl)))
-
-    n_sol = sum(1 for rel in scripts if rel not in connected)
-    html_doc = TEMPLATE.format(
-        nodes=&quot;,\n&quot;.join(nodes_js),
-        links=&quot;,\n&quot;.join(links_js),
-        textareas=&quot;\n&quot;.join(textareas),
-        count=len(scripts),
-        edges=len(links_js),
-        solitary=n_sol,
-    )
+    htmldoc = (TEMPLATE
+               .replace(&quot;__TREEDATA__&quot;, json.dumps(tree))
+               .replace(&quot;__TEXTAREAS__&quot;, &quot;\n&quot;.join(textareas))
+               .replace(&quot;27&quot;, str(len(files)))
+               .replace(&quot;4&quot;, str(len(standalone))))
     os.makedirs(os.path.dirname(out) or &quot;.&quot;, exist_ok=True)
     with open(out, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
-        f.write(html_doc)
-    print(&quot;[OK] wrote %s  (%d scripts, %d relationships, %d solitary)&quot;
-          % (out, len(scripts), len(links_js), n_sol))
-
-
-def _q(s):
-    &quot;&quot;&quot;JS string literal.&quot;&quot;&quot;
-    return &#x27;&quot;&#x27; + s.replace(&quot;\\&quot;, &quot;\\\\&quot;).replace(&#x27;&quot;&#x27;, &#x27;\\&quot;&#x27;) + &#x27;&quot;&#x27;
+        f.write(htmldoc)
+    print(&quot;[OK] wrote %s  (%d files, %d standalone)&quot; % (out, len(files), len(standalone)))
 
 
 TEMPLATE = r&quot;&quot;&quot;&lt;!DOCTYPE html&gt;
@@ -883,55 +1000,53 @@ TEMPLATE = r&quot;&quot;&quot;&lt;!DOCTYPE html&gt;
 &lt;head&gt;
 &lt;meta charset=&quot;UTF-8&quot;&gt;
 &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-&lt;title&gt;Find Evil! — Script Relationship Map&lt;/title&gt;
+&lt;title&gt;Find Evil! — Script Mind-Map&lt;/title&gt;
 &lt;style&gt;
-  * {{ box-sizing: border-box; margin: 0; padding: 0; }}
-  html, body {{ width: 100%; height: 100%; background: #0d1117; overflow: hidden;
-    font-family: &#x27;Segoe UI&#x27;, system-ui, sans-serif; color: #e6edf3; }}
-  header {{ position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 42px;
-    background: #161b22; border-bottom: 1px solid #30363d; padding: 9px 16px;
-    display: flex; align-items: center; gap: 14px; }}
-  header h1 {{ font-size: 14px; font-weight: 600; color: #58a6ff; white-space: nowrap; }}
-  .hint {{ font-size: 11px; color: #6e7681; }}
-  .spacer {{ flex: 1; }}
-  .btn {{ background: #21262d; border: 1px solid #30363d; border-radius: 5px;
-    padding: 4px 10px; color: #e6edf3; font-size: 11px; cursor: pointer; }}
-  .btn:hover {{ background: #30363d; }}
-  #chart {{ position: fixed; top: 42px; left: 0; right: 0; bottom: 0; }}
-  /* sidebar */
-  #side {{ position: fixed; top: 42px; right: 0; bottom: 0; width: 46%; max-width: 760px;
-    background: #0b0f14; border-left: 1px solid #30363d; z-index: 90;
-    transform: translateX(100%); transition: transform .18s ease; display: flex;
-    flex-direction: column; }}
-  #side.open {{ transform: translateX(0); box-shadow: -12px 0 30px rgba(0,0,0,.45); }}
-  #side-hd {{ display: flex; align-items: center; gap: 10px; padding: 9px 12px;
-    border-bottom: 1px solid #30363d; background: #161b22; }}
-  #side-hd .path {{ font-family: ui-monospace, monospace; font-size: 12.5px; color: #e6edf3;
-    word-break: break-all; }}
-  #side-hd .tag {{ font-size: 10px; padding: 2px 7px; border-radius: 10px; color: #0d1117;
-    font-weight: 700; white-space: nowrap; }}
-  #side pre {{ margin: 0; padding: 12px 14px; overflow: auto; flex: 1;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px;
-    line-height: 1.5; color: #c9d1d9; white-space: pre; tab-size: 4; }}
-  #close {{ margin-left: auto; }}
-  #tip {{ position: fixed; background: #161b22; border: 1px solid #30363d; border-radius: 6px;
-    padding: 5px 9px; font-family: ui-monospace, monospace; font-size: 11.5px; color: #e6edf3;
-    pointer-events: none; opacity: 0; transition: opacity .1s; z-index: 200; }}
-  .node-label {{ font-family: ui-monospace, monospace; font-size: 10px; fill: #adbac7;
-    pointer-events: none; }}
-  .edge-label {{ font-size: 8.5px; fill: #6e7681; pointer-events: none; }}
-  #legend {{ position: fixed; left: 12px; bottom: 12px; z-index: 80; background: #161b22cc;
-    border: 1px solid #30363d; border-radius: 7px; padding: 8px 10px; font-size: 11px; }}
-  #legend div {{ display: flex; align-items: center; gap: 7px; margin: 2px 0; }}
-  #legend i {{ width: 10px; height: 10px; border-radius: 2px; display: inline-block; }}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width:100%; height:100%; background:#0d1117; overflow:hidden;
+    font-family:&#x27;Segoe UI&#x27;,system-ui,sans-serif; color:#e6edf3; }
+  header { position:fixed; top:0; left:0; right:0; z-index:100; height:42px; background:#161b22;
+    border-bottom:1px solid #30363d; padding:9px 16px; display:flex; align-items:center; gap:14px; }
+  header h1 { font-size:14px; font-weight:600; color:#58a6ff; white-space:nowrap; }
+  .hint { font-size:11px; color:#6e7681; }
+  .spacer { flex:1; }
+  .btn { background:#21262d; border:1px solid #30363d; border-radius:5px; padding:4px 10px;
+    color:#e6edf3; font-size:11px; cursor:pointer; }
+  .btn:hover { background:#30363d; }
+  #chart { position:fixed; top:42px; left:0; right:0; bottom:0; }
+  #side { position:fixed; top:42px; right:0; bottom:0; width:46%; max-width:760px; background:#0b0f14;
+    border-left:1px solid #30363d; z-index:90; transform:translateX(100%); transition:transform .18s ease;
+    display:flex; flex-direction:column; }
+  #side.open { transform:translateX(0); box-shadow:-12px 0 30px rgba(0,0,0,.45); }
+  #side-hd { display:flex; align-items:center; gap:10px; padding:9px 12px; border-bottom:1px solid #30363d;
+    background:#161b22; }
+  #side-hd .path { font-family:ui-monospace,monospace; font-size:12.5px; word-break:break-all; }
+  #side-hd .tag { font-size:10px; padding:2px 7px; border-radius:10px; color:#0d1117; font-weight:700;
+    white-space:nowrap; }
+  #side pre { margin:0; padding:12px 14px; overflow:auto; flex:1;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; line-height:1.5;
+    color:#c9d1d9; white-space:pre; tab-size:4; }
+  #close { margin-left:auto; }
+  #tip { position:fixed; background:#161b22; border:1px solid #30363d; border-radius:6px; padding:5px 9px;
+    font-family:ui-monospace,monospace; font-size:11.5px; pointer-events:none; opacity:0;
+    transition:opacity .1s; z-index:200; max-width:340px; }
+  .link { fill:none; stroke:#3d444d; stroke-width:1.5px; }
+  .nlabel { font-family:ui-monospace,monospace; font-size:11px; fill:#adbac7; }
+  .elabel { font-size:9px; fill:#6e7681; }
+  .ref text { font-style:italic; }
+  #legend { position:fixed; left:12px; bottom:12px; z-index:80; background:#161b22cc;
+    border:1px solid #30363d; border-radius:7px; padding:8px 10px; font-size:11px; }
+  #legend div { display:flex; align-items:center; gap:7px; margin:2px 0; }
+  #legend i { width:10px; height:10px; border-radius:2px; display:inline-block; }
 &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
 &lt;header&gt;
-  &lt;h1&gt;Find Evil! — Script Relationship Map&lt;/h1&gt;
-  &lt;span class=&quot;hint&quot;&gt;{count} scripts · {edges} relationships · {solitary} solitary — click a node to view its source · scroll to zoom · drag to pan/move&lt;/span&gt;
+  &lt;h1&gt;Find Evil! — Script Mind-Map&lt;/h1&gt;
+  &lt;span class=&quot;hint&quot;&gt;27 scripts/configs · 4 standalone — click a node to expand · click a file to view its source · scroll/drag to zoom &amp;amp; pan&lt;/span&gt;
   &lt;div class=&quot;spacer&quot;&gt;&lt;/div&gt;
-  &lt;button class=&quot;btn&quot; id=&quot;btn-reset&quot;&gt;Reset view&lt;/button&gt;
+  &lt;button class=&quot;btn&quot; id=&quot;btn-expand&quot;&gt;Expand all&lt;/button&gt;
+  &lt;button class=&quot;btn&quot; id=&quot;btn-reset&quot;&gt;Collapse / reset&lt;/button&gt;
 &lt;/header&gt;
 &lt;div id=&quot;chart&quot;&gt;&lt;/div&gt;
 &lt;div id=&quot;tip&quot;&gt;&lt;/div&gt;
@@ -942,101 +1057,110 @@ TEMPLATE = r&quot;&quot;&quot;&lt;!DOCTYPE html&gt;
   &lt;pre id=&quot;side-code&quot;&gt;&lt;/pre&gt;
 &lt;/aside&gt;
 
-{textareas}
+__TEXTAREAS__
 
 &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js&quot;&gt;&lt;/script&gt;
 &lt;script&gt;
 &quot;use strict&quot;;
-const NODES = [
-{nodes}
-];
-const LINKS = [
-{links}
-];
+const DATA = __TREEDATA__;
 
-const GROUP_COLORS = {{}};
-NODES.forEach(n =&gt; GROUP_COLORS[n.group] = n.color);
-
-// legend
+const COLORS = {};
+(function walk(n){ if(n.color) COLORS[n.group]=n.color; (n.children||[]).forEach(walk); })(DATA);
 const legend = document.getElementById(&quot;legend&quot;);
-Object.entries(GROUP_COLORS).forEach(([g,c]) =&gt; {{
-  const row = document.createElement(&quot;div&quot;);
-  row.innerHTML = &#x27;&lt;i style=&quot;background:&#x27;+c+&#x27;&quot;&gt;&lt;/i&gt;&lt;span&gt;&#x27;+g+&#x27;&lt;/span&gt;&#x27;;
-  legend.appendChild(row);
-}});
+Object.entries(COLORS).forEach(([g,c])=&gt;{ const d=document.createElement(&quot;div&quot;);
+  d.innerHTML=&#x27;&lt;i style=&quot;background:&#x27;+c+&#x27;&quot;&gt;&lt;/i&gt;&lt;span&gt;&#x27;+g+&#x27;&lt;/span&gt;&#x27;; legend.appendChild(d); });
 
-const chart = document.getElementById(&quot;chart&quot;);
-const W = () =&gt; chart.clientWidth, H = () =&gt; chart.clientHeight;
-const svg = d3.select(&quot;#chart&quot;).append(&quot;svg&quot;).attr(&quot;width&quot;,&quot;100%&quot;).attr(&quot;height&quot;,&quot;100%&quot;);
-const defs = svg.append(&quot;defs&quot;);
-defs.append(&quot;marker&quot;).attr(&quot;id&quot;,&quot;arrow&quot;).attr(&quot;viewBox&quot;,&quot;0 -5 10 10&quot;)
-  .attr(&quot;refX&quot;,22).attr(&quot;refY&quot;,0).attr(&quot;markerWidth&quot;,6).attr(&quot;markerHeight&quot;,6)
-  .attr(&quot;orient&quot;,&quot;auto&quot;).append(&quot;path&quot;).attr(&quot;d&quot;,&quot;M0,-5L10,0L0,5&quot;).attr(&quot;fill&quot;,&quot;#6e7681&quot;);
+const chart=document.getElementById(&quot;chart&quot;);
+const svg=d3.select(&quot;#chart&quot;).append(&quot;svg&quot;).attr(&quot;width&quot;,&quot;100%&quot;).attr(&quot;height&quot;,&quot;100%&quot;);
+const defs=svg.append(&quot;defs&quot;);
+defs.append(&quot;marker&quot;).attr(&quot;id&quot;,&quot;arr&quot;).attr(&quot;viewBox&quot;,&quot;0 -5 10 10&quot;).attr(&quot;refX&quot;,16).attr(&quot;refY&quot;,0)
+  .attr(&quot;markerWidth&quot;,5).attr(&quot;markerHeight&quot;,5).attr(&quot;orient&quot;,&quot;auto&quot;)
+  .append(&quot;path&quot;).attr(&quot;d&quot;,&quot;M0,-5L10,0L0,5&quot;).attr(&quot;fill&quot;,&quot;#6e7681&quot;);
+const g=svg.append(&quot;g&quot;);
+const zoom=d3.zoom().scaleExtent([0.2,3]).on(&quot;zoom&quot;,e=&gt;g.attr(&quot;transform&quot;,e.transform));
+svg.call(zoom).on(&quot;dblclick.zoom&quot;,null);
 
-const g = svg.append(&quot;g&quot;);
-svg.call(d3.zoom().scaleExtent([0.15,4]).on(&quot;zoom&quot;, e =&gt; g.attr(&quot;transform&quot;, e.transform)))
-   .on(&quot;dblclick.zoom&quot;, null);
+const DX=26, DY=270;     // row height, column width
+const tree=d3.tree().nodeSize([DX,DY]);
+const root=d3.hierarchy(DATA);
+root.x0=0; root.y0=0;
+let uid=0; root.descendants().forEach(d=&gt;{ d._id = ++uid; });
 
-const link = g.append(&quot;g&quot;).selectAll(&quot;line&quot;).data(LINKS).join(&quot;line&quot;)
-  .attr(&quot;stroke&quot;,&quot;#3d444d&quot;).attr(&quot;stroke-width&quot;,1.4).attr(&quot;marker-end&quot;,&quot;url(#arrow)&quot;);
-const elabel = g.append(&quot;g&quot;).selectAll(&quot;text&quot;).data(LINKS).join(&quot;text&quot;)
-  .attr(&quot;class&quot;,&quot;edge-label&quot;).text(d =&gt; d.label);
+// start collapsed: root + its direct children visible, everything deeper hidden
+function collapse(d){ if(d.children){ d._children=d.children; d._children.forEach(collapse); d.children=null; } }
+(root.children||[]).forEach(collapse);
+update(root);
+setTimeout(fit, 60);
 
-const node = g.append(&quot;g&quot;).selectAll(&quot;g&quot;).data(NODES).join(&quot;g&quot;).style(&quot;cursor&quot;,&quot;pointer&quot;);
-node.append(&quot;circle&quot;)
-  .attr(&quot;r&quot;, d =&gt; d.solitary ? 7 : 9)
-  .attr(&quot;fill&quot;, d =&gt; d.color)
-  .attr(&quot;stroke&quot;, d =&gt; d.solitary ? &quot;#6e7681&quot; : &quot;#0d1117&quot;)
-  .attr(&quot;stroke-width&quot;, d =&gt; d.solitary ? 1.5 : 2)
-  .attr(&quot;stroke-dasharray&quot;, d =&gt; d.solitary ? &quot;2,2&quot; : null);
-node.append(&quot;text&quot;).attr(&quot;class&quot;,&quot;node-label&quot;).attr(&quot;x&quot;,12).attr(&quot;y&quot;,4).text(d =&gt; d.label);
+function update(source){
+  tree(root);
+  const nodes=root.descendants(), links=root.links();
+  let minx=Infinity,maxx=-Infinity;
+  nodes.forEach(d=&gt;{ minx=Math.min(minx,d.x); maxx=Math.max(maxx,d.x); });
 
-const tip = document.getElementById(&quot;tip&quot;);
-node.on(&quot;mouseover&quot;,(e,d)=&gt;{{tip.textContent=d.path;tip.style.opacity=1;}})
-    .on(&quot;mousemove&quot;,e=&gt;{{tip.style.left=(e.clientX+12)+&quot;px&quot;;tip.style.top=(e.clientY+12)+&quot;px&quot;;}})
-    .on(&quot;mouseout&quot;,()=&gt;tip.style.opacity=0)
-    .on(&quot;click&quot;,(e,d)=&gt;openSide(d));
+  const node=g.selectAll(&quot;g.node&quot;).data(nodes, d=&gt;d._id);
+  const nEnter=node.enter().append(&quot;g&quot;).attr(&quot;class&quot;,d=&gt;&quot;node&quot;+(d.data.kind===&quot;ref&quot;?&quot; ref&quot;:&quot;&quot;))
+    .attr(&quot;transform&quot;,d=&gt;`translate(${source.y0},${source.x0})`)
+    .style(&quot;cursor&quot;,&quot;pointer&quot;).on(&quot;click&quot;,(e,d)=&gt;{ toggle(d); openSide(d); })
+    .on(&quot;mouseover&quot;,(e,d)=&gt;{ tip.textContent=(d.data.path||d.data.name)+(d.data.edge?&quot;  —  &quot;+d.data.edge:&quot;&quot;); tip.style.opacity=1; })
+    .on(&quot;mousemove&quot;,e=&gt;{ tip.style.left=(e.clientX+12)+&quot;px&quot;; tip.style.top=(e.clientY+12)+&quot;px&quot;; })
+    .on(&quot;mouseout&quot;,()=&gt;tip.style.opacity=0);
+  nEnter.append(&quot;circle&quot;).attr(&quot;r&quot;,5.5)
+    .attr(&quot;fill&quot;,d=&gt; (d._children) ? d.data.color : (d.data.kind===&quot;synthetic&quot; ? &quot;#0d1117&quot; : d.data.color))
+    .attr(&quot;stroke&quot;,d=&gt;d.data.color).attr(&quot;stroke-width&quot;,2)
+    .attr(&quot;stroke-dasharray&quot;,d=&gt;d.data.kind===&quot;ref&quot;?&quot;2,2&quot;:null);
+  nEnter.append(&quot;text&quot;).attr(&quot;class&quot;,&quot;nlabel&quot;).attr(&quot;dy&quot;,4)
+    .attr(&quot;x&quot;,d=&gt;d.children||d._children?-10:10).attr(&quot;text-anchor&quot;,d=&gt;d.children||d._children?&quot;end&quot;:&quot;start&quot;)
+    .text(d=&gt;d.data.name + ((d._children&amp;&amp;d._children.length)?&quot;  ▸&quot;:&quot;&quot;));
+  const tip=document.getElementById(&quot;tip&quot;);
 
-const sim = d3.forceSimulation(NODES)
-  .force(&quot;link&quot;, d3.forceLink(LINKS).distance(95).strength(0.6))
-  .force(&quot;charge&quot;, d3.forceManyBody().strength(-380))
-  .force(&quot;collide&quot;, d3.forceCollide(34))
-  .force(&quot;center&quot;, d3.forceCenter(W()/2, H()/2))
-  .force(&quot;x&quot;, d3.forceX(W()/2).strength(0.04))
-  .force(&quot;y&quot;, d3.forceY(H()/2).strength(0.04))
-  .on(&quot;tick&quot;, ticked);
+  const nUpd=nEnter.merge(node);
+  nUpd.transition().duration(180).attr(&quot;transform&quot;,d=&gt;`translate(${d.y},${d.x})`);
+  nUpd.select(&quot;text&quot;).text(d=&gt;d.data.name + ((d._children&amp;&amp;d._children.length)?&quot;  ▸&quot;:&quot;&quot;))
+    .attr(&quot;x&quot;,d=&gt;d.children||d._children?-10:10).attr(&quot;text-anchor&quot;,d=&gt;d.children||d._children?&quot;end&quot;:&quot;start&quot;);
+  nUpd.select(&quot;circle&quot;).attr(&quot;fill&quot;,d=&gt;(d._children)?d.data.color:(d.data.kind===&quot;synthetic&quot;?&quot;#0d1117&quot;:d.data.color));
+  node.exit().transition().duration(180).attr(&quot;transform&quot;,d=&gt;`translate(${source.y},${source.x})`).remove();
 
-function ticked() {{
-  link.attr(&quot;x1&quot;,d=&gt;d.source.x).attr(&quot;y1&quot;,d=&gt;d.source.y)
-      .attr(&quot;x2&quot;,d=&gt;d.target.x).attr(&quot;y2&quot;,d=&gt;d.target.y);
-  elabel.attr(&quot;x&quot;,d=&gt;(d.source.x+d.target.x)/2).attr(&quot;y&quot;,d=&gt;(d.source.y+d.target.y)/2);
-  node.attr(&quot;transform&quot;,d=&gt;`translate(${{d.x}},${{d.y}})`);
-}}
-node.call(d3.drag()
-  .on(&quot;start&quot;,(e,d)=&gt;{{if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y;}})
-  .on(&quot;drag&quot;,(e,d)=&gt;{{d.fx=e.x;d.fy=e.y;}})
-  .on(&quot;end&quot;,(e,d)=&gt;{{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;}}));
+  const link=g.selectAll(&quot;path.link&quot;).data(links, d=&gt;d.target._id);
+  const lEnter=link.enter().insert(&quot;path&quot;,&quot;g&quot;).attr(&quot;class&quot;,&quot;link&quot;).attr(&quot;marker-end&quot;,&quot;url(#arr)&quot;)
+    .attr(&quot;d&quot;,()=&gt;{ const o={x:source.x0,y:source.y0}; return diag(o,o); });
+  lEnter.merge(link).transition().duration(180).attr(&quot;d&quot;,d=&gt;diag(d.source,d.target));
+  link.exit().transition().duration(180).attr(&quot;d&quot;,()=&gt;{ const o={x:source.x,y:source.y}; return diag(o,o); }).remove();
 
-// sidebar
+  const el=g.selectAll(&quot;text.elabel&quot;).data(links, d=&gt;d.target._id);
+  const elEnter=el.enter().append(&quot;text&quot;).attr(&quot;class&quot;,&quot;elabel&quot;).attr(&quot;dy&quot;,-3).text(d=&gt;d.target.data.edge||&quot;&quot;);
+  elEnter.merge(el).transition().duration(180)
+    .attr(&quot;x&quot;,d=&gt;(d.source.y+d.target.y)/2).attr(&quot;y&quot;,d=&gt;(d.source.x+d.target.x)/2).attr(&quot;text-anchor&quot;,&quot;middle&quot;);
+  el.exit().remove();
+
+  nodes.forEach(d=&gt;{ d.x0=d.x; d.y0=d.y; });
+}
+function diag(s,t){ return `M${s.y},${s.x}C${(s.y+t.y)/2},${s.x} ${(s.y+t.y)/2},${t.x} ${t.y},${t.x}`; }
+function toggle(d){ if(d.children){ d._children=d.children; d.children=null; } else if(d._children){ d.children=d._children; d._children=null; } update(d); }
+
+function expandAll(d){ if(d._children){ d.children=d._children; d._children=null; } (d.children||[]).forEach(expandAll); }
+
 const side=document.getElementById(&quot;side&quot;);
-function openSide(d){{
-  document.getElementById(&quot;side-path&quot;).textContent=d.path;
-  const tag=document.getElementById(&quot;side-tag&quot;);
-  tag.textContent=d.group; tag.style.background=d.color;
-  const ta=document.getElementById(&quot;src-&quot;+d.id);
-  document.getElementById(&quot;side-code&quot;).textContent = ta ? ta.value : &quot;(source unavailable)&quot;;
-  side.classList.add(&quot;open&quot;);
-}}
+function openSide(d){
+  document.getElementById(&quot;side-path&quot;).textContent = d.data.path || d.data.name;
+  const tag=document.getElementById(&quot;side-tag&quot;); tag.textContent=d.data.group; tag.style.background=d.data.color;
+  let body;
+  if(d.data.srcId!=null){ const ta=document.getElementById(&quot;src-&quot;+d.data.srcId);
+    body=(d.data.kind===&quot;ref&quot;?&quot;// also shown in full elsewhere in the tree\n\n&quot;:&quot;&quot;)+(ta?ta.value:&quot;(source unavailable)&quot;); }
+  else { body=d.data.desc||&quot;&quot;; }
+  document.getElementById(&quot;side-code&quot;).textContent=body; side.classList.add(&quot;open&quot;);
+}
 document.getElementById(&quot;close&quot;).onclick=()=&gt;side.classList.remove(&quot;open&quot;);
 
-document.getElementById(&quot;btn-reset&quot;).onclick=()=&gt;{{
-  svg.transition().duration(400).call(
-    d3.zoom().transform, d3.zoomIdentity);
-  sim.alpha(0.6).restart();
-}};
-window.addEventListener(&quot;resize&quot;,()=&gt;{{
-  sim.force(&quot;center&quot;, d3.forceCenter(W()/2,H()/2)); sim.alpha(0.3).restart();
-}});
+function fit(){
+  const b=g.node().getBBox(), cw=chart.clientWidth, ch=chart.clientHeight;
+  const s=Math.min(cw/(b.width+80), ch/(b.height+80), 1.4);
+  const tx=(cw-(b.width+80)*s)/2 - (b.x-40)*s, ty=(ch-(b.height+80)*s)/2 - (b.y-40)*s;
+  svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity.translate(tx,ty).scale(s));
+}
+document.getElementById(&quot;btn-reset&quot;).onclick=()=&gt;{ (root.children||root._children||[]).forEach(c=&gt;{ c.children=c.children||c._children; }); root.children=root.children||root._children; root._children=null; (root.children||[]).forEach(collapse); update(root); setTimeout(fit,60); };
+document.getElementById(&quot;btn-expand&quot;).onclick=()=&gt;{ expandAll(root); update(root); setTimeout(fit,60); };
+window.addEventListener(&quot;resize&quot;,fit);
 &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;
@@ -1045,7 +1169,7 @@ window.addEventListener(&quot;resize&quot;,()=&gt;{{
 if __name__ == &quot;__main__&quot;:
     main()
 </textarea>
-<textarea hidden id="src-2">#!/usr/bin/env python3
+<textarea hidden id="src-3">#!/usr/bin/env python3
 &quot;&quot;&quot;generate_report.py — PDF incident-report generator for the Find Evil! DFIR agent.
 
 Reads a case&#x27;s committed analysis artifacts and renders a court-style incident report:
@@ -1298,7 +1422,7 @@ def main():
 if __name__ == &quot;__main__&quot;:
     main()
 </textarea>
-<textarea hidden id="src-3">#!/usr/bin/env python3
+<textarea hidden id="src-4">#!/usr/bin/env python3
 &quot;&quot;&quot;
 Find Evil! Hackathon — Exec Gateway
 =====================================
@@ -2013,7 +2137,7 @@ def main():
 if __name__ == &quot;__main__&quot;:
     main()
 </textarea>
-<textarea hidden id="src-4">#!/usr/bin/env bash
+<textarea hidden id="src-5">#!/usr/bin/env bash
 # SessionStart hook: ensure the exec gateway is running for every Claude Code
 # session. Idempotent — the /health probe prevents duplicate instances, and the
 # gateway is started fully detached (setsid) so it survives this session and is
@@ -2042,7 +2166,7 @@ fi
 disown 2&gt;/dev/null || true
 exit 0
 </textarea>
-<textarea hidden id="src-5">#!/usr/bin/env bash
+<textarea hidden id="src-6">#!/usr/bin/env bash
 # Pre-tool-use hook: validates Bash commands against the exec gateway before execution.
 # Claude Code calls this hook before every Bash tool use.
 #
@@ -2116,7 +2240,7 @@ echo &quot;[GUARDRAIL BLOCKED] ${REASON}&quot;
 echo &quot;[GUARDRAIL BLOCKED] Command: ${COMMAND:0:120}&quot;
 exit 2
 </textarea>
-<textarea hidden id="src-6">#!/usr/bin/env bash
+<textarea hidden id="src-7">#!/usr/bin/env bash
 #
 # Find Evil! — one-click installer for the SANS SIFT Workstation.
 #
@@ -2248,8 +2372,35 @@ Next steps:
 Try it against public evidence (NIST CFReDS &quot;Data Leakage Case&quot;): see docs/TRY_IT_OUT.md
 EOF
 </textarea>
-<textarea hidden id="src-7"></textarea>
-<textarea hidden id="src-8">&quot;&quot;&quot;Activity ledger for the SIFT MCP server.
+<textarea hidden id="src-8">{
+  &quot;_comment&quot;: &quot;Canonical ATT&amp;CK TTP mapping reference for the IR agent. CONSULT this when assigning a finding&#x27;s mitre_technique; the independent judge cross-checks each finding&#x27;s TTP against it and flags mismatches. Seeded from VIGIA-REAL-002 + SRL-2015 scoring. Extend as new cases reveal divergences from public answer keys.&quot;,
+  &quot;version&quot;: &quot;1.0&quot;,
+  &quot;updated_at&quot;: &quot;2026-06-15&quot;,
+  &quot;principles&quot;: [
+    &quot;When a behavior has multiple defensible technique IDs, prefer the one the public answer key uses (NIST CFReDS / VIGIA / ATT&amp;CK Evals).&quot;,
+    &quot;Tag every distinct exfiltration CHANNEL separately (email T1048, cloud T1567.002, USB T1052.001, web T1567.001) — do not collapse to one.&quot;,
+    &quot;Map each finding to the most specific applicable technique/sub-technique.&quot;
+  ],
+  &quot;mappings&quot;: [
+    {&quot;behavior&quot;: &quot;File renamed to a false/different extension to conceal content (e.g. .docx-&gt;.mp3, .pptx-&gt;.jpg)&quot;, &quot;technique&quot;: &quot;T1564&quot;, &quot;name&quot;: &quot;Hide Artifacts&quot;, &quot;tactic&quot;: &quot;defense-evasion&quot;, &quot;note&quot;: &quot;VIGIA/NIST keys score this as T1564. T1036.008 (Masquerade File Type) is a defensible alternative but mismatched the key in VIGIA-REAL-002 — prefer T1564 for concealment-by-extension.&quot;, &quot;source&quot;: &quot;VIGIA-REAL-002&quot;},
+    {&quot;behavior&quot;: &quot;Data/credentials handed off or exfiltrated via email (e.g. emailing a Drive login, sending files out)&quot;, &quot;technique&quot;: &quot;T1048&quot;, &quot;name&quot;: &quot;Exfiltration Over Alternative Protocol&quot;, &quot;tactic&quot;: &quot;exfiltration&quot;, &quot;note&quot;: &quot;Tag the email channel explicitly even when cloud exfil (T1567) is also present — VIGIA-REAL-002 key listed both; I under-tagged this.&quot;, &quot;source&quot;: &quot;VIGIA-REAL-002&quot;},
+    {&quot;behavior&quot;: &quot;Upload to personal cloud storage (Google Drive, Dropbox, personal Gmail)&quot;, &quot;technique&quot;: &quot;T1567.002&quot;, &quot;name&quot;: &quot;Exfiltration to Cloud Storage&quot;, &quot;tactic&quot;: &quot;exfiltration&quot;, &quot;note&quot;: &quot;&quot;, &quot;source&quot;: &quot;VIGIA-REAL-002&quot;},
+    {&quot;behavior&quot;: &quot;Logon with a valid account, especially off-hours / policy-violating&quot;, &quot;technique&quot;: &quot;T1078&quot;, &quot;name&quot;: &quot;Valid Accounts&quot;, &quot;tactic&quot;: &quot;initial-access&quot;, &quot;note&quot;: &quot;&quot;, &quot;source&quot;: &quot;VIGIA-REAL-002&quot;},
+    {&quot;behavior&quot;: &quot;Anti-forensic / cleanup tooling installed or used (CCleaner, Eraser, sdelete); log clearing&quot;, &quot;technique&quot;: &quot;T1070&quot;, &quot;name&quot;: &quot;Indicator Removal&quot;, &quot;tactic&quot;: &quot;defense-evasion&quot;, &quot;note&quot;: &quot;&quot;, &quot;source&quot;: &quot;VIGIA-REAL-002&quot;},
+    {&quot;behavior&quot;: &quot;Copying files from a network/secured share&quot;, &quot;technique&quot;: &quot;T1039&quot;, &quot;name&quot;: &quot;Data from Network Shared Drive&quot;, &quot;tactic&quot;: &quot;collection&quot;, &quot;note&quot;: &quot;&quot;, &quot;source&quot;: &quot;VIGIA-REAL-002&quot;},
+    {&quot;behavior&quot;: &quot;Staging collected files locally before exfil (e.g. Desktop\\$data)&quot;, &quot;technique&quot;: &quot;T1074.001&quot;, &quot;name&quot;: &quot;Local Data Staging&quot;, &quot;tactic&quot;: &quot;collection&quot;, &quot;note&quot;: &quot;&quot;, &quot;source&quot;: &quot;VIGIA-REAL-002&quot;},
+    {&quot;behavior&quot;: &quot;Exfiltration to physical/removable media (USB, CD-R)&quot;, &quot;technique&quot;: &quot;T1052.001&quot;, &quot;name&quot;: &quot;Exfiltration over USB&quot;, &quot;tactic&quot;: &quot;exfiltration&quot;, &quot;note&quot;: &quot;&quot;, &quot;source&quot;: &quot;general&quot;},
+    {&quot;behavior&quot;: &quot;Malware running under a fake name/path imitating a system binary (e.g. svchost.exe from a non-System32 dir)&quot;, &quot;technique&quot;: &quot;T1036.005&quot;, &quot;name&quot;: &quot;Match Legitimate Name or Location&quot;, &quot;tactic&quot;: &quot;defense-evasion&quot;, &quot;note&quot;: &quot;&quot;, &quot;source&quot;: &quot;SRL-2015&quot;},
+    {&quot;behavior&quot;: &quot;Injected EXECUTE_READWRITE / private memory regions in a process&quot;, &quot;technique&quot;: &quot;T1055&quot;, &quot;name&quot;: &quot;Process Injection&quot;, &quot;tactic&quot;: &quot;defense-evasion&quot;, &quot;note&quot;: &quot;&quot;, &quot;source&quot;: &quot;SRL-2015&quot;},
+    {&quot;behavior&quot;: &quot;Persistence via registry Run / RunOnce key&quot;, &quot;technique&quot;: &quot;T1547.001&quot;, &quot;name&quot;: &quot;Registry Run Keys / Startup Folder&quot;, &quot;tactic&quot;: &quot;persistence&quot;, &quot;note&quot;: &quot;&quot;, &quot;source&quot;: &quot;SRL-2015&quot;},
+    {&quot;behavior&quot;: &quot;C2 over HTTP/HTTPS web protocols (port 443/80 beacon)&quot;, &quot;technique&quot;: &quot;T1071.001&quot;, &quot;name&quot;: &quot;Web Protocols&quot;, &quot;tactic&quot;: &quot;command-and-control&quot;, &quot;note&quot;: &quot;&quot;, &quot;source&quot;: &quot;SRL-2015&quot;},
+    {&quot;behavior&quot;: &quot;Execution via Windows command shell (cmd.exe chains)&quot;, &quot;technique&quot;: &quot;T1059.003&quot;, &quot;name&quot;: &quot;Windows Command Shell&quot;, &quot;tactic&quot;: &quot;execution&quot;, &quot;note&quot;: &quot;&quot;, &quot;source&quot;: &quot;SRL-2015&quot;},
+    {&quot;behavior&quot;: &quot;Spearphishing link / lure (shortened URL directing a user to a malicious or spoofed site)&quot;, &quot;technique&quot;: &quot;T1566.002&quot;, &quot;name&quot;: &quot;Spearphishing Link&quot;, &quot;tactic&quot;: &quot;initial-access&quot;, &quot;note&quot;: &quot;&quot;, &quot;source&quot;: &quot;SRL-2015&quot;}
+  ]
+}
+</textarea>
+<textarea hidden id="src-9"></textarea>
+<textarea hidden id="src-10">&quot;&quot;&quot;Activity ledger for the SIFT MCP server.
 
 Every MCP tool call and every underlying OS subprocess is appended as one JSON
 object per line to SIFT_MCP_AUDIT_LOG. The dashboard&#x27;s &quot;MCP Server Activity&quot;
@@ -2301,7 +2452,7 @@ def log_event(kind: str, **fields) -&gt; None:
     except Exception:
         pass
 </textarea>
-<textarea hidden id="src-9">&quot;&quot;&quot;Shared subprocess utilities for SIFT MCP server tool wrappers.
+<textarea hidden id="src-11">&quot;&quot;&quot;Shared subprocess utilities for SIFT MCP server tool wrappers.
 
 Every tool wrapper uses run_tool() for subprocess execution and
 save_raw_output() to write raw tool output to the audit trail directory.
@@ -2488,7 +2639,7 @@ def is_private_ip(ip: str) -&gt; bool:
     except ValueError:
         return True
 </textarea>
-<textarea hidden id="src-10">&quot;&quot;&quot;SIFT IR Agent — MCP server entry point.
+<textarea hidden id="src-12">&quot;&quot;&quot;SIFT IR Agent — MCP server entry point.
 
 Exposes 16 forensic tool functions over the MCP stdio transport so that
 Claude Code (or any MCP-compatible agent) can call them as structured
@@ -2616,8 +2767,21 @@ if __name__ == &quot;__main__&quot;:
     # via stdin/stdout. No port binding, no network exposure.
     mcp.run()
 </textarea>
-<textarea hidden id="src-11"></textarea>
-<textarea hidden id="src-12">&quot;&quot;&quot;Amcache artefact parser — parse_amcache MCP tool function.
+<textarea hidden id="src-13">{
+  &quot;mcpServers&quot;: {
+    &quot;sift-ir-agent&quot;: {
+      &quot;command&quot;: &quot;python3&quot;,
+      &quot;args&quot;: [&quot;/home/la/.claude/sift-mcp-server/server.py&quot;],
+      &quot;cwd&quot;: &quot;/home/la/.claude/sift-mcp-server&quot;,
+      &quot;env&quot;: {
+        &quot;PYTHONPATH&quot;: &quot;/home/la/.claude/sift-mcp-server&quot;
+      }
+    }
+  }
+}
+</textarea>
+<textarea hidden id="src-14"></textarea>
+<textarea hidden id="src-15">&quot;&quot;&quot;Amcache artefact parser — parse_amcache MCP tool function.
 
 Parses Amcache.hve (Windows AppCompat) to enumerate recently executed
 programs. Uses AmcacheParser (EZ Tools) as primary; falls back to
@@ -2932,7 +3096,7 @@ def _score_regripper_entry(entry: dict, suspicious: list[dict]) -&gt; None:
             &quot;confidence&quot;: &quot;medium&quot;,
         })
 </textarea>
-<textarea hidden id="src-13">&quot;&quot;&quot;Disk artifact carver — carve_disk_artifacts MCP tool function.
+<textarea hidden id="src-16">&quot;&quot;&quot;Disk artifact carver — carve_disk_artifacts MCP tool function.
 
 Runs bulk_extractor against a disk image and returns a structured summary
 of carved artifact categories: URLs, emails, domains, executables, credit
@@ -3070,7 +3234,7 @@ def _score_urls(url_items: list[dict]) -&gt; list[dict]:
                 break
     return suspicious
 </textarea>
-<textarea hidden id="src-14">&quot;&quot;&quot;Case-data read gateway — flat, audited reads of case artifacts that have no
+<textarea hidden id="src-17">&quot;&quot;&quot;Case-data read gateway — flat, audited reads of case artifacts that have no
 live-tool equivalent (precooked Volatility/Plaso output, the Redline MANS DB,
 the evidence manifest).
 
@@ -3309,7 +3473,7 @@ def build_evidence_manifest(case_dir: str) -&gt; dict:
     except Exception as exc:  # noqa: BLE001
         return {&quot;error&quot;: str(exc), &quot;files&quot;: files}
 </textarea>
-<textarea hidden id="src-15">&quot;&quot;&quot;Windows event log parser — parse_event_logs MCP tool function.
+<textarea hidden id="src-18">&quot;&quot;&quot;Windows event log parser — parse_event_logs MCP tool function.
 
 Uses EvtxECmd (EZ Tools) if available, falls back to evtx_dump.
 Filters to key security event IDs and applies suspicious pattern detection.
@@ -3561,7 +3725,7 @@ def _parse_evtx_dump_jsonl(stdout: str, artifact: str) -&gt; dict:
         &quot;error&quot;: None,
     }
 </textarea>
-<textarea hidden id="src-16">&quot;&quot;&quot;Disk filesystem analyser — analyze_disk_filesystem MCP tool function.
+<textarea hidden id="src-19">&quot;&quot;&quot;Disk filesystem analyser — analyze_disk_filesystem MCP tool function.
 
 Uses MFTECmd (EZ Tools) if available; falls back to fls (TSK).
 Returns file listing with suspicious path highlighting: startup folders,
@@ -3758,7 +3922,7 @@ def _find_mft(image_path: str) -&gt; str | None:
         return str(mft) if mft.exists() else None
     return None
 </textarea>
-<textarea hidden id="src-17">&quot;&quot;&quot;Living-off-the-Land behaviour detector — hunt_lotl_behaviors MCP tool.
+<textarea hidden id="src-20">&quot;&quot;&quot;Living-off-the-Land behaviour detector — hunt_lotl_behaviors MCP tool.
 
 Runs Chainsaw with Sigma rules against .evtx files, then cross-references
 results against the LOLBAS catalogue. Covers ClickFix execution chains.
@@ -4017,7 +4181,7 @@ def _extract_binary(hit: dict) -&gt; str:
             return Path(str(val).split()[0].strip(&#x27;&quot;&#x27;)).name.lower()
     return &quot;?&quot;
 </textarea>
-<textarea hidden id="src-18">&quot;&quot;&quot;Network capture analyser — analyze_network_capture MCP tool function.
+<textarea hidden id="src-21">&quot;&quot;&quot;Network capture analyser — analyze_network_capture MCP tool function.
 
 Uses tshark to extract TCP conversations, DNS queries, and HTTP requests.
 Flags external IPs, unusual TLDs, beaconing patterns, and large transfers.
@@ -4248,7 +4412,7 @@ def _tshark_available() -&gt; bool:
     r = run_tool([&quot;tshark&quot;, &quot;--version&quot;], timeout=5)
     return not r[&quot;tool_missing&quot;] and r[&quot;returncode&quot;] == 0
 </textarea>
-<textarea hidden id="src-19">&quot;&quot;&quot;Windows registry persistence parser — parse_registry_persistence MCP tool.
+<textarea hidden id="src-22">&quot;&quot;&quot;Windows registry persistence parser — parse_registry_persistence MCP tool.
 
 Uses RECmd (EZ Tools) if available; falls back to RegRipper.
 Focused on persistence key locations. Includes ClickFix-specific patterns
@@ -4519,7 +4683,7 @@ def _extract_key_path(block: str) -&gt; str:
             return line.strip()[:200]
     return &quot;&quot;
 </textarea>
-<textarea hidden id="src-20">&quot;&quot;&quot;Supertimeline builder — build_supertimeline MCP tool function.
+<textarea hidden id="src-23">&quot;&quot;&quot;Supertimeline builder — build_supertimeline MCP tool function.
 
 Runs log2timeline.py (Plaso) to build a .plaso database from all evidence
 sources, then exports with psort.py to CSV. Returns a bounded slice of the
@@ -4700,7 +4864,7 @@ def _score_timeline_csv(csv_path: str) -&gt; tuple[list[dict], int]:
 
     return suspicious, total
 </textarea>
-<textarea hidden id="src-21">&quot;&quot;&quot;Volatility 3 memory analysis — three MCP tool functions.
+<textarea hidden id="src-24">&quot;&quot;&quot;Volatility 3 memory analysis — three MCP tool functions.
 
 analyze_memory_processes  — process tree + command lines, parent-child flags
 analyze_memory_network    — netscan, external connection flags
@@ -4985,7 +5149,7 @@ def analyze_memory_malfind(image_path: str, output_dir: str) -&gt; dict:
         &quot;error&quot;: r[&quot;stderr&quot;] if r[&quot;returncode&quot;] != 0 else None,
     }
 </textarea>
-<textarea hidden id="src-22">&quot;&quot;&quot;YARA pattern matching — hunt_yara MCP tool function.
+<textarea hidden id="src-25">&quot;&quot;&quot;YARA pattern matching — hunt_yara MCP tool function.
 
 Runs YARA rules against a target path (file, directory, or memory image).
 Returns structured match list with rule name, file, and offset.
@@ -5117,7 +5281,7 @@ def _technique_from_rule(rule_name: str) -&gt; str:
         return &quot;T1547&quot;
     return &quot;T1588&quot;   # generic: Obtain Capabilities
 </textarea>
-<textarea hidden id="src-23">#!/usr/bin/env python3
+<textarea hidden id="src-26">#!/usr/bin/env python3
 &quot;&quot;&quot;
 Find Evil! Hackathon — IR Agent Live Dashboard
 ================================================
@@ -7538,150 +7702,105 @@ if __name__ == &quot;__main__&quot;:
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script>
 "use strict";
-const NODES = [
-{id:0,path:"agent/guardrails.py",label:"guardrails.py",group:"agent",color:"#d29922",solitary:false},
-{id:1,path:"analysis-scripts/build_script_graph.py",label:"build_script_graph.py",group:"analysis",color:"#39c5cf",solitary:true},
-{id:2,path:"analysis-scripts/generate_report.py",label:"generate_report.py",group:"analysis",color:"#39c5cf",solitary:false},
-{id:3,path:"gateway/runclawd_exec_gateway.py",label:"runclawd_exec_gateway.py",group:"gateway",color:"#f85149",solitary:false},
-{id:4,path:"hooks/ensure_gateway.sh",label:"ensure_gateway.sh",group:"hooks",color:"#a371f7",solitary:false},
-{id:5,path:"hooks/pre_tool_use.sh",label:"pre_tool_use.sh",group:"hooks",color:"#a371f7",solitary:false},
-{id:6,path:"install.sh",label:"install.sh",group:"root",color:"#f0883e",solitary:false},
-{id:7,path:"sift-mcp-server/parsers/__init__.py",label:"__init__.py",group:"mcp",color:"#3fb950",solitary:true},
-{id:8,path:"sift-mcp-server/parsers/audit.py",label:"audit.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:9,path:"sift-mcp-server/parsers/common.py",label:"common.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:10,path:"sift-mcp-server/server.py",label:"server.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:11,path:"sift-mcp-server/tools/__init__.py",label:"__init__.py",group:"mcp",color:"#3fb950",solitary:true},
-{id:12,path:"sift-mcp-server/tools/amcache.py",label:"amcache.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:13,path:"sift-mcp-server/tools/carve.py",label:"carve.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:14,path:"sift-mcp-server/tools/casedata.py",label:"casedata.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:15,path:"sift-mcp-server/tools/evtx.py",label:"evtx.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:16,path:"sift-mcp-server/tools/filesystem.py",label:"filesystem.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:17,path:"sift-mcp-server/tools/lotl.py",label:"lotl.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:18,path:"sift-mcp-server/tools/network.py",label:"network.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:19,path:"sift-mcp-server/tools/registry.py",label:"registry.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:20,path:"sift-mcp-server/tools/timeline.py",label:"timeline.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:21,path:"sift-mcp-server/tools/volatility.py",label:"volatility.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:22,path:"sift-mcp-server/tools/yara.py",label:"yara.py",group:"mcp",color:"#3fb950",solitary:false},
-{id:23,path:"web/dashboard.py",label:"dashboard.py",group:"web",color:"#58a6ff",solitary:false}
-];
-const LINKS = [
-{source:10,target:8,label:"imports"},
-{source:10,target:21,label:"imports"},
-{source:10,target:15,label:"imports"},
-{source:10,target:17,label:"imports"},
-{source:10,target:16,label:"imports"},
-{source:10,target:13,label:"imports"},
-{source:10,target:19,label:"imports"},
-{source:10,target:18,label:"imports"},
-{source:10,target:22,label:"imports"},
-{source:10,target:20,label:"imports"},
-{source:10,target:12,label:"imports"},
-{source:10,target:14,label:"imports"},
-{source:16,target:9,label:"imports"},
-{source:21,target:9,label:"imports"},
-{source:20,target:9,label:"imports"},
-{source:15,target:9,label:"imports"},
-{source:13,target:9,label:"imports"},
-{source:19,target:9,label:"imports"},
-{source:12,target:9,label:"imports"},
-{source:17,target:9,label:"imports"},
-{source:22,target:9,label:"imports"},
-{source:18,target:9,label:"imports"},
-{source:0,target:3,label:"calls (HTTP :12345)"},
-{source:5,target:3,label:"validates via"},
-{source:4,target:3,label:"launches"},
-{source:23,target:3,label:"reads audit / mode"},
-{source:23,target:0,label:"mode toggle"},
-{source:3,target:0,label:"vets (allowlist)"},
-{source:6,target:3,label:"launches"},
-{source:6,target:10,label:"registers (MCP)"},
-{source:6,target:23,label:"documents"},
-{source:6,target:2,label:"documents"}
-];
+const DATA = {"id": 42, "name": "Find Evil! scripts", "edge": "", "desc": "The Find Evil! script tree. Click a node to reveal what it pulls in; click again to collapse. Click any script or JSON to view its source here. '\u21a9' marks a node shown in full elsewhere (cycle or shared dependency).", "kind": "synthetic", "group": "root", "color": "#8b949e", "srcId": null, "children": [{"id": 0, "name": "install.sh", "path": "install.sh", "edge": "entry point", "group": "root", "color": "#f0883e", "srcId": 7, "kind": "script", "children": [{"id": 1, "name": "runclawd_exec_gateway.py", "path": "gateway/runclawd_exec_gateway.py", "edge": "launches", "group": "gateway", "color": "#f85149", "srcId": 4, "kind": "script", "children": [{"id": 2, "name": "guardrails.py", "path": "agent/guardrails.py", "edge": "vets (allowlist)", "group": "agent", "color": "#d29922", "srcId": 0, "kind": "script", "children": [{"id": 3, "name": "runclawd_exec_gateway.py  \u21a9", "path": "gateway/runclawd_exec_gateway.py", "edge": "calls (HTTP :12345)", "group": "gateway", "color": "#f85149", "srcId": 4, "kind": "ref"}, {"id": 4, "name": "ttp_reference.json", "path": "reference/ttp_reference.json", "edge": "judge TTP cross-check", "group": "reference", "color": "#e3b341", "srcId": 8, "kind": "json"}]}]}, {"id": 5, "name": "server.py", "path": "sift-mcp-server/server.py", "edge": "registers (MCP)", "group": "mcp", "color": "#3fb950", "srcId": 12, "kind": "script", "children": [{"id": 6, "name": "audit.py", "path": "sift-mcp-server/parsers/audit.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 10, "kind": "script"}, {"id": 7, "name": "volatility.py", "path": "sift-mcp-server/tools/volatility.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 24, "kind": "script", "children": [{"id": 8, "name": "common.py", "path": "sift-mcp-server/parsers/common.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 11, "kind": "script"}]}, {"id": 9, "name": "evtx.py", "path": "sift-mcp-server/tools/evtx.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 18, "kind": "script", "children": [{"id": 10, "name": "common.py", "path": "sift-mcp-server/parsers/common.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 11, "kind": "script"}]}, {"id": 11, "name": "lotl.py", "path": "sift-mcp-server/tools/lotl.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 20, "kind": "script", "children": [{"id": 12, "name": "common.py", "path": "sift-mcp-server/parsers/common.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 11, "kind": "script"}]}, {"id": 13, "name": "filesystem.py", "path": "sift-mcp-server/tools/filesystem.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 19, "kind": "script", "children": [{"id": 14, "name": "common.py", "path": "sift-mcp-server/parsers/common.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 11, "kind": "script"}]}, {"id": 15, "name": "carve.py", "path": "sift-mcp-server/tools/carve.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 16, "kind": "script", "children": [{"id": 16, "name": "common.py", "path": "sift-mcp-server/parsers/common.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 11, "kind": "script"}]}, {"id": 17, "name": "registry.py", "path": "sift-mcp-server/tools/registry.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 22, "kind": "script", "children": [{"id": 18, "name": "common.py", "path": "sift-mcp-server/parsers/common.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 11, "kind": "script"}]}, {"id": 19, "name": "network.py", "path": "sift-mcp-server/tools/network.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 21, "kind": "script", "children": [{"id": 20, "name": "common.py", "path": "sift-mcp-server/parsers/common.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 11, "kind": "script"}]}, {"id": 21, "name": "yara.py", "path": "sift-mcp-server/tools/yara.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 25, "kind": "script", "children": [{"id": 22, "name": "common.py", "path": "sift-mcp-server/parsers/common.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 11, "kind": "script"}]}, {"id": 23, "name": "timeline.py", "path": "sift-mcp-server/tools/timeline.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 23, "kind": "script", "children": [{"id": 24, "name": "common.py", "path": "sift-mcp-server/parsers/common.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 11, "kind": "script"}]}, {"id": 25, "name": "amcache.py", "path": "sift-mcp-server/tools/amcache.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 15, "kind": "script", "children": [{"id": 26, "name": "common.py", "path": "sift-mcp-server/parsers/common.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 11, "kind": "script"}]}, {"id": 27, "name": "casedata.py", "path": "sift-mcp-server/tools/casedata.py", "edge": "imports", "group": "mcp", "color": "#3fb950", "srcId": 17, "kind": "script"}]}, {"id": 28, "name": "dashboard.py", "path": "web/dashboard.py", "edge": "documents", "group": "web", "color": "#58a6ff", "srcId": 26, "kind": "script", "children": [{"id": 29, "name": "runclawd_exec_gateway.py  \u21a9", "path": "gateway/runclawd_exec_gateway.py", "edge": "reads audit / mode", "group": "gateway", "color": "#f85149", "srcId": 4, "kind": "ref"}, {"id": 30, "name": "guardrails.py  \u21a9", "path": "agent/guardrails.py", "edge": "mode toggle", "group": "agent", "color": "#d29922", "srcId": 0, "kind": "ref"}]}, {"id": 31, "name": "generate_report.py", "path": "analysis-scripts/generate_report.py", "edge": "documents", "group": "analysis", "color": "#39c5cf", "srcId": 3, "kind": "script"}, {"id": 32, "name": "settings.json", "path": "agent/settings.json", "edge": "wires hooks", "group": "agent", "color": "#d29922", "srcId": 1, "kind": "json", "children": [{"id": 33, "name": "pre_tool_use.sh", "path": "hooks/pre_tool_use.sh", "edge": "PreToolUse hook", "group": "hooks", "color": "#a371f7", "srcId": 6, "kind": "script", "children": [{"id": 34, "name": "runclawd_exec_gateway.py  \u21a9", "path": "gateway/runclawd_exec_gateway.py", "edge": "validates via", "group": "gateway", "color": "#f85149", "srcId": 4, "kind": "ref"}]}, {"id": 35, "name": "ensure_gateway.sh", "path": "hooks/ensure_gateway.sh", "edge": "SessionStart hook", "group": "hooks", "color": "#a371f7", "srcId": 5, "kind": "script", "children": [{"id": 36, "name": "runclawd_exec_gateway.py  \u21a9", "path": "gateway/runclawd_exec_gateway.py", "edge": "launches", "group": "gateway", "color": "#f85149", "srcId": 4, "kind": "ref"}]}]}]}, {"id": 41, "name": "Standalone (4)", "edge": "not wired into the run", "desc": "Files no other script imports, launches, or references at runtime: the graph generator, Python package __init__ markers, and an unused MCP settings copy.", "kind": "synthetic", "group": "root", "color": "#8b949e", "srcId": null, "children": [{"id": 37, "name": "build_script_graph.py", "path": "analysis-scripts/build_script_graph.py", "edge": "standalone", "group": "analysis", "color": "#39c5cf", "srcId": 2, "kind": "script"}, {"id": 38, "name": "__init__.py", "path": "sift-mcp-server/parsers/__init__.py", "edge": "standalone", "group": "mcp", "color": "#3fb950", "srcId": 9, "kind": "script"}, {"id": 39, "name": "settings.json", "path": "sift-mcp-server/settings.json", "edge": "standalone", "group": "mcp", "color": "#3fb950", "srcId": 13, "kind": "json"}, {"id": 40, "name": "__init__.py", "path": "sift-mcp-server/tools/__init__.py", "edge": "standalone", "group": "mcp", "color": "#3fb950", "srcId": 14, "kind": "script"}]}]};
 
-const GROUP_COLORS = {};
-NODES.forEach(n => GROUP_COLORS[n.group] = n.color);
-
-// legend
+const COLORS = {};
+(function walk(n){ if(n.color) COLORS[n.group]=n.color; (n.children||[]).forEach(walk); })(DATA);
 const legend = document.getElementById("legend");
-Object.entries(GROUP_COLORS).forEach(([g,c]) => {
-  const row = document.createElement("div");
-  row.innerHTML = '<i style="background:'+c+'"></i><span>'+g+'</span>';
-  legend.appendChild(row);
-});
+Object.entries(COLORS).forEach(([g,c])=>{ const d=document.createElement("div");
+  d.innerHTML='<i style="background:'+c+'"></i><span>'+g+'</span>'; legend.appendChild(d); });
 
-const chart = document.getElementById("chart");
-const W = () => chart.clientWidth, H = () => chart.clientHeight;
-const svg = d3.select("#chart").append("svg").attr("width","100%").attr("height","100%");
-const defs = svg.append("defs");
-defs.append("marker").attr("id","arrow").attr("viewBox","0 -5 10 10")
-  .attr("refX",22).attr("refY",0).attr("markerWidth",6).attr("markerHeight",6)
-  .attr("orient","auto").append("path").attr("d","M0,-5L10,0L0,5").attr("fill","#6e7681");
+const chart=document.getElementById("chart");
+const svg=d3.select("#chart").append("svg").attr("width","100%").attr("height","100%");
+const defs=svg.append("defs");
+defs.append("marker").attr("id","arr").attr("viewBox","0 -5 10 10").attr("refX",16).attr("refY",0)
+  .attr("markerWidth",5).attr("markerHeight",5).attr("orient","auto")
+  .append("path").attr("d","M0,-5L10,0L0,5").attr("fill","#6e7681");
+const g=svg.append("g");
+const zoom=d3.zoom().scaleExtent([0.2,3]).on("zoom",e=>g.attr("transform",e.transform));
+svg.call(zoom).on("dblclick.zoom",null);
 
-const g = svg.append("g");
-svg.call(d3.zoom().scaleExtent([0.15,4]).on("zoom", e => g.attr("transform", e.transform)))
-   .on("dblclick.zoom", null);
+const DX=26, DY=270;     // row height, column width
+const tree=d3.tree().nodeSize([DX,DY]);
+const root=d3.hierarchy(DATA);
+root.x0=0; root.y0=0;
+let uid=0; root.descendants().forEach(d=>{ d._id = ++uid; });
 
-const link = g.append("g").selectAll("line").data(LINKS).join("line")
-  .attr("stroke","#3d444d").attr("stroke-width",1.4).attr("marker-end","url(#arrow)");
-const elabel = g.append("g").selectAll("text").data(LINKS).join("text")
-  .attr("class","edge-label").text(d => d.label);
+// start collapsed: root + its direct children visible, everything deeper hidden
+function collapse(d){ if(d.children){ d._children=d.children; d._children.forEach(collapse); d.children=null; } }
+(root.children||[]).forEach(collapse);
+update(root);
+setTimeout(fit, 60);
 
-const node = g.append("g").selectAll("g").data(NODES).join("g").style("cursor","pointer");
-node.append("circle")
-  .attr("r", d => d.solitary ? 7 : 9)
-  .attr("fill", d => d.color)
-  .attr("stroke", d => d.solitary ? "#6e7681" : "#0d1117")
-  .attr("stroke-width", d => d.solitary ? 1.5 : 2)
-  .attr("stroke-dasharray", d => d.solitary ? "2,2" : null);
-node.append("text").attr("class","node-label").attr("x",12).attr("y",4).text(d => d.label);
+function update(source){
+  tree(root);
+  const nodes=root.descendants(), links=root.links();
+  let minx=Infinity,maxx=-Infinity;
+  nodes.forEach(d=>{ minx=Math.min(minx,d.x); maxx=Math.max(maxx,d.x); });
 
-const tip = document.getElementById("tip");
-node.on("mouseover",(e,d)=>{tip.textContent=d.path;tip.style.opacity=1;})
-    .on("mousemove",e=>{tip.style.left=(e.clientX+12)+"px";tip.style.top=(e.clientY+12)+"px";})
-    .on("mouseout",()=>tip.style.opacity=0)
-    .on("click",(e,d)=>openSide(d));
+  const node=g.selectAll("g.node").data(nodes, d=>d._id);
+  const nEnter=node.enter().append("g").attr("class",d=>"node"+(d.data.kind==="ref"?" ref":""))
+    .attr("transform",d=>`translate(${source.y0},${source.x0})`)
+    .style("cursor","pointer").on("click",(e,d)=>{ toggle(d); openSide(d); })
+    .on("mouseover",(e,d)=>{ tip.textContent=(d.data.path||d.data.name)+(d.data.edge?"  —  "+d.data.edge:""); tip.style.opacity=1; })
+    .on("mousemove",e=>{ tip.style.left=(e.clientX+12)+"px"; tip.style.top=(e.clientY+12)+"px"; })
+    .on("mouseout",()=>tip.style.opacity=0);
+  nEnter.append("circle").attr("r",5.5)
+    .attr("fill",d=> (d._children) ? d.data.color : (d.data.kind==="synthetic" ? "#0d1117" : d.data.color))
+    .attr("stroke",d=>d.data.color).attr("stroke-width",2)
+    .attr("stroke-dasharray",d=>d.data.kind==="ref"?"2,2":null);
+  nEnter.append("text").attr("class","nlabel").attr("dy",4)
+    .attr("x",d=>d.children||d._children?-10:10).attr("text-anchor",d=>d.children||d._children?"end":"start")
+    .text(d=>d.data.name + ((d._children&&d._children.length)?"  ▸":""));
+  const tip=document.getElementById("tip");
 
-const sim = d3.forceSimulation(NODES)
-  .force("link", d3.forceLink(LINKS).distance(95).strength(0.6))
-  .force("charge", d3.forceManyBody().strength(-380))
-  .force("collide", d3.forceCollide(34))
-  .force("center", d3.forceCenter(W()/2, H()/2))
-  .force("x", d3.forceX(W()/2).strength(0.04))
-  .force("y", d3.forceY(H()/2).strength(0.04))
-  .on("tick", ticked);
+  const nUpd=nEnter.merge(node);
+  nUpd.transition().duration(180).attr("transform",d=>`translate(${d.y},${d.x})`);
+  nUpd.select("text").text(d=>d.data.name + ((d._children&&d._children.length)?"  ▸":""))
+    .attr("x",d=>d.children||d._children?-10:10).attr("text-anchor",d=>d.children||d._children?"end":"start");
+  nUpd.select("circle").attr("fill",d=>(d._children)?d.data.color:(d.data.kind==="synthetic"?"#0d1117":d.data.color));
+  node.exit().transition().duration(180).attr("transform",d=>`translate(${source.y},${source.x})`).remove();
 
-function ticked() {
-  link.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y)
-      .attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
-  elabel.attr("x",d=>(d.source.x+d.target.x)/2).attr("y",d=>(d.source.y+d.target.y)/2);
-  node.attr("transform",d=>`translate(${d.x},${d.y})`);
+  const link=g.selectAll("path.link").data(links, d=>d.target._id);
+  const lEnter=link.enter().insert("path","g").attr("class","link").attr("marker-end","url(#arr)")
+    .attr("d",()=>{ const o={x:source.x0,y:source.y0}; return diag(o,o); });
+  lEnter.merge(link).transition().duration(180).attr("d",d=>diag(d.source,d.target));
+  link.exit().transition().duration(180).attr("d",()=>{ const o={x:source.x,y:source.y}; return diag(o,o); }).remove();
+
+  const el=g.selectAll("text.elabel").data(links, d=>d.target._id);
+  const elEnter=el.enter().append("text").attr("class","elabel").attr("dy",-3).text(d=>d.target.data.edge||"");
+  elEnter.merge(el).transition().duration(180)
+    .attr("x",d=>(d.source.y+d.target.y)/2).attr("y",d=>(d.source.x+d.target.x)/2).attr("text-anchor","middle");
+  el.exit().remove();
+
+  nodes.forEach(d=>{ d.x0=d.x; d.y0=d.y; });
 }
-node.call(d3.drag()
-  .on("start",(e,d)=>{if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y;})
-  .on("drag",(e,d)=>{d.fx=e.x;d.fy=e.y;})
-  .on("end",(e,d)=>{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;}));
+function diag(s,t){ return `M${s.y},${s.x}C${(s.y+t.y)/2},${s.x} ${(s.y+t.y)/2},${t.x} ${t.y},${t.x}`; }
+function toggle(d){ if(d.children){ d._children=d.children; d.children=null; } else if(d._children){ d.children=d._children; d._children=null; } update(d); }
 
-// sidebar
+function expandAll(d){ if(d._children){ d.children=d._children; d._children=null; } (d.children||[]).forEach(expandAll); }
+
 const side=document.getElementById("side");
 function openSide(d){
-  document.getElementById("side-path").textContent=d.path;
-  const tag=document.getElementById("side-tag");
-  tag.textContent=d.group; tag.style.background=d.color;
-  const ta=document.getElementById("src-"+d.id);
-  document.getElementById("side-code").textContent = ta ? ta.value : "(source unavailable)";
-  side.classList.add("open");
+  document.getElementById("side-path").textContent = d.data.path || d.data.name;
+  const tag=document.getElementById("side-tag"); tag.textContent=d.data.group; tag.style.background=d.data.color;
+  let body;
+  if(d.data.srcId!=null){ const ta=document.getElementById("src-"+d.data.srcId);
+    body=(d.data.kind==="ref"?"// also shown in full elsewhere in the tree\n\n":"")+(ta?ta.value:"(source unavailable)"); }
+  else { body=d.data.desc||""; }
+  document.getElementById("side-code").textContent=body; side.classList.add("open");
 }
 document.getElementById("close").onclick=()=>side.classList.remove("open");
 
-document.getElementById("btn-reset").onclick=()=>{
-  svg.transition().duration(400).call(
-    d3.zoom().transform, d3.zoomIdentity);
-  sim.alpha(0.6).restart();
-};
-window.addEventListener("resize",()=>{
-  sim.force("center", d3.forceCenter(W()/2,H()/2)); sim.alpha(0.3).restart();
-});
+function fit(){
+  const b=g.node().getBBox(), cw=chart.clientWidth, ch=chart.clientHeight;
+  const s=Math.min(cw/(b.width+80), ch/(b.height+80), 1.4);
+  const tx=(cw-(b.width+80)*s)/2 - (b.x-40)*s, ty=(ch-(b.height+80)*s)/2 - (b.y-40)*s;
+  svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity.translate(tx,ty).scale(s));
+}
+document.getElementById("btn-reset").onclick=()=>{ (root.children||root._children||[]).forEach(c=>{ c.children=c.children||c._children; }); root.children=root.children||root._children; root._children=null; (root.children||[]).forEach(collapse); update(root); setTimeout(fit,60); };
+document.getElementById("btn-expand").onclick=()=>{ expandAll(root); update(root); setTimeout(fit,60); };
+window.addEventListener("resize",fit);
 </script>
 </body>
 </html>
